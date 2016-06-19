@@ -34,7 +34,7 @@ public class EntryPoint {
    * first.
    * 
    * @param baseDir
-   *          directory from which analysis will be run
+   *          directory from which analysis wisll be run
    * @param data
    * @param environmentVariables
    *
