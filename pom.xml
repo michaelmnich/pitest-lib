@@ -65,6 +65,8 @@
 		<module>pitest-command-line</module>
 		<module>pitest-html-report</module>
 		<module>pitest-maven-verification</module>
+		<module>../Pit-as-external-lib</module>
+		<module>Pit-as-external-lib</module>
 	</modules>
 
 	<prerequisites>
