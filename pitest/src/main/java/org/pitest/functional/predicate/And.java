@@ -14,10 +14,10 @@
  */
 package org.pitest.functional.predicate;
 
+import org.pitest.functional.F;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import org.pitest.functional.F;
 
 /**
  * @author henry
@@ -32,6 +32,8 @@ public class And<A> implements Predicate<A> {
       this.ps.add(each);
     }
   }
+
+
 
   @Override
   public Boolean apply(final A a) {

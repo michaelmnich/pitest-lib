@@ -22,7 +22,7 @@ public class ConsoleComandsContorler {
     public static void ProgramImmput(String s, String args ){
         if(s.toLowerCase().equals("-r")){
 
-            PitRunner pitRun = new PitRunner(args);
+         //   PitRunner pitRun = new PitRunner(args);
 
         }
     }

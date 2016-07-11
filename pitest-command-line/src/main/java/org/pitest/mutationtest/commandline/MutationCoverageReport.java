@@ -14,8 +14,6 @@
  */
 package org.pitest.mutationtest.commandline;
 
-import java.util.HashMap;
-
 import org.pitest.coverage.CoverageSummary;
 import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
@@ -24,6 +22,8 @@ import org.pitest.mutationtest.tooling.AnalysisResult;
 import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.mutationtest.tooling.EntryPoint;
 import org.pitest.util.Unchecked;
+
+import java.util.HashMap;
 
 /**
  * Entry point for command line interface
@@ -34,7 +34,27 @@ public class MutationCoverageReport {
 
     final PluginServices plugins = PluginServices.makeForContextLoader();
     final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
-    final ParseResult pr = parser.parse(args);
+
+
+
+    String args2[] = new String[]{
+            "",
+            "",
+            "",
+            "",
+            "",
+            "-cp D:\\Doktorat\\IOgr602-master\\IOgr602-master\\target\\test-classes\\;D:\\Doktorat\\IOgr602-master\\IOgr602-master\\target\\classes\\;C:\\pit\\pitest-1.1.11-SNAPSHOT.jar;C:\\pit\\junit-4.12.jar;C:\\pit\\pitest-command-line-1.1.11-SNAPSHOT.jar;C:\\Program Files\\Java\\jdk1.7.0_79\\bin",
+                "--reportDir D:\\trash\\",
+                "--targetClasses matrixlibrary.*," ,
+                "--targetTests matrixlibrary.*,",
+                "--sourceDirs D:\\Doktorat\\IOgr602-master (1)\\IOgr602-master\\",
+
+
+            "",};
+
+
+
+    final ParseResult pr = parser.parse(args2);
 
     if (!pr.isOk()) {
       parser.printHelp();
