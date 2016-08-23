@@ -1,12 +1,5 @@
 package org.pitest.maven;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -23,8 +16,14 @@ import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.plugin.ClientClasspathPlugin;
 import org.pitest.plugin.ToolClasspathPlugin;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class AbstractPitMojo extends AbstractMojo {
 
@@ -311,6 +310,7 @@ public class AbstractPitMojo extends AbstractMojo {
     this(new RunPitStrategy(), new DependencyFilter(new PluginServices(
         AbstractPitMojo.class.getClassLoader())), new PluginServices(
         AbstractPitMojo.class.getClassLoader()));
+    System.out.println("DUPA JEGO MAć!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   public AbstractPitMojo(final GoalStrategy strategy, final Predicate<Artifact> filter,

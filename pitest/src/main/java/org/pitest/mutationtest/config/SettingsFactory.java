@@ -1,9 +1,5 @@
 package org.pitest.mutationtest.config;
 
-import static org.pitest.functional.prelude.Prelude.not;
-
-import java.util.Collection;
-
 import org.pitest.classpath.ClassPathByteArraySource;
 import org.pitest.coverage.CoverageExporter;
 import org.pitest.coverage.execute.CoverageOptions;
@@ -30,10 +26,14 @@ import org.pitest.util.PitError;
 import org.pitest.util.ResultOutputStrategy;
 import org.pitest.util.StringUtil;
 
+import java.util.Collection;
+
+import static org.pitest.functional.prelude.Prelude.not;
+
 public class SettingsFactory {
 
-  private final ReportOptions  options;
-  private final PluginServices plugins;
+  public final ReportOptions  options;
+  public final PluginServices plugins;
 
   public SettingsFactory(final ReportOptions options,
       final PluginServices plugins) {

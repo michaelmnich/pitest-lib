@@ -14,15 +14,7 @@
  */
 package org.pitest.maven;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.project.MavenProject;
@@ -37,7 +29,14 @@ import org.pitest.functional.FCollection;
 import org.pitest.functional.predicate.Predicate;
 import org.pitest.mutationtest.config.PluginServices;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Mockito.when;
 
 public abstract class BasePitMojoTest extends AbstractMojoTestCase {
 
@@ -96,6 +95,53 @@ public abstract class BasePitMojoTest extends AbstractMojoTestCase {
         "</project>";
     return pom;
   }
+
+  protected String createNormalConfig() {
+    final String pom =  "<project xmlns='http://maven.apache.org/POM/4.0.0'xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>" +
+    "    <modelVersion>4.0.0</modelVersion>" +
+            "    <groupId>UJWMiI-IO-Projekt</groupId>" +
+            "    <artifactId>ProjektGrupa2</artifactId>" +
+            "    <version>1.1.11-SNAPSHOT</version>" +
+            "    <build>" +
+            "        <plugins>" +
+            "            <plugin>" +
+            "                <groupId>org.pitest</groupId>" +
+            "                <artifactId>pitest-maven</artifactId>" +
+            "				  <version>1.1.11-SNAPSHOT</version>" +
+            "                <configuration>" +
+            "                    <targetClasses>" +
+            "                        <param>matrixlibrary.*</param>" +
+            "                    </targetClasses>" +
+            "                    <targetTests>" +
+            "                        <param>matrixlibrary.*</param>" +
+            "                    </targetTests>" +
+            "                </configuration>" +
+            "            </plugin>" +
+            "        </plugins>" +
+            "    </build>" +
+            "    <dependencies>" +
+            "        <dependency>" +
+            "            <groupId>junit</groupId>" +
+            "            <artifactId>junit</artifactId>" +
+            "            <version>4.12</version>" +
+            "            <scope>test</scope>" +
+            "        </dependency>" +
+            "        <dependency>" +
+            "            <groupId>junit</groupId>" +
+            "            <artifactId>junit</artifactId>" +
+            "            <version>4.12</version>" +
+            "        </dependency>" +
+            "    </dependencies>" +
+            "</project>" ;
+
+
+
+
+
+
+    return pom;
+  }
+
 
   protected AbstractPitMojo createPITMojo(final String config) throws Exception {
     final AbstractPitMojo pitMojo = new AbstractPitMojo(this.executionStrategy, this.filter,

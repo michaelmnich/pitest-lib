@@ -23,7 +23,6 @@ import org.pitest.util.Timings;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.Map;
 
 public class ExtendedEntryPoint {
@@ -68,9 +67,14 @@ public class ExtendedEntryPoint {
     System.out.println("██║     ██║   ██║       ███████╗██╔╝ ██╗   ██║   ███████╗██║ ╚████║██████╔╝███████╗██████╔╝    ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║");
     System.out.println("╚═╝     ╚═╝   ╚═╝       ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═════╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝");
     System.out.println("______________________________________________________________________________________________________________");
-    System.out.println("PIT EXTENDED RUNNER 1.0  Creative Commons License http://pitest.org/ & Michael Mnich  ");
+    System.out.println("PIT EXTENDED RUNNER 1.1  Creative Commons License http://pitest.org/ & Michael Mnich  ");
 
-    data.setMutators(Arrays.asList("INCREMENTS"));
+    //data.setMutators(Arrays.asList("INCREMENTS"));
+
+
+
+
+
 
     final ClassPath cp = data.getClassPath();
 

@@ -1,14 +1,5 @@
 package org.pitest.maven;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.Map;
-
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -19,6 +10,13 @@ import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.statistics.MutationStatistics;
 import org.pitest.mutationtest.statistics.Score;
 import org.pitest.mutationtest.tooling.CombinedStatistics;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.Map;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 public class PitMojoTest extends BasePitMojoTest {
 
@@ -34,11 +32,26 @@ public class PitMojoTest extends BasePitMojoTest {
     this.testee = createPITMojo(createPomWithConfiguration(""));
     final Build build = new Build();
     build.setOutputDirectory("foo");
+    String s = build.getSourceDirectory();
     this.testee.getProject().setBuild(build);
     this.testee.execute();
     verify(this.executionStrategy).execute(any(File.class),
         any(ReportOptions.class), any(PluginServices.class), anyMap());
   }
+
+
+  public void testOMG()
+          throws Exception {
+    this.testee = createPITMojo(createNormalConfig());
+    final Build build = new Build();
+    build.setOutputDirectory("D:\\Doktorat\\PDTP\\pitest-master\\pitest-master\\pitest-maven\\target\\outtest");
+    this.testee.getProject().setBuild(build);
+    this.testee.execute();
+//    verify(this.executionStrategy).execute(any(File.class),
+//            any(ReportOptions.class), any(PluginServices.class), anyMap());
+  }
+
+
 
   public void testDoesNotAnalysePomProjects() throws Exception {
     when(this.project.getPackaging()).thenReturn("pom");
@@ -113,7 +126,9 @@ public class PitMojoTest extends BasePitMojoTest {
       // pass
     }
   }
-  
+
+
+
   public void testThrowsMojoFailureExceptionWhenCoverageBelowThreshold()
       throws Exception {
     this.testee = createPITMojo(createPomWithConfiguration("<coverageThreshold>50</coverageThreshold>"));
