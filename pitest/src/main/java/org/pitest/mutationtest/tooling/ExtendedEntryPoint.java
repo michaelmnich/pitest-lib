@@ -69,7 +69,7 @@ public class ExtendedEntryPoint {
     System.out.println("______________________________________________________________________________________________________________");
     System.out.println("PIT EXTENDED RUNNER 1.1  Creative Commons License http://pitest.org/ & Michael Mnich  ");
 
-    //data.setMutators(Arrays.asList("INCREMENTS"));
+   // data.setMutators(Arrays.asList("INCREMENTS"));
 
 
 

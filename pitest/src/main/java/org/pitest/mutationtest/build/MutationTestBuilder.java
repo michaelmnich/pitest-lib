@@ -56,28 +56,10 @@ public class MutationTestBuilder {
       final Collection<ClassName> codeClasses) {
     final List<MutationAnalysisUnit> tus = new ArrayList<MutationAnalysisUnit>();
 
-    List<MutationDetails> mutations3 = FCollection.flatMap(codeClasses, classToMutations());
-    List<MutationDetails> mutations2 = new ArrayList<MutationDetails>();
+    List<MutationDetails> defoultMutations = FCollection.flatMap(codeClasses, classToMutations());
+
     //tutaj dzieje sie magia
-
-
-    MutationRandomizerSingleton.getInstance().hokusPokus();
-
-
-  Integer i = 0;
-    for (MutationDetails m: mutations3) {
-
-      if ( i.equals(0) ) {
-        mutations2.add(m);
-        i = 1;
-      }
-      else  {
-        i = 0;
-      }
-    }
-
-
-    final List<MutationDetails> mutations = mutations2;
+    final List<MutationDetails> mutations = MutationRandomizerSingleton.getInstance().Randomize(defoultMutations);
     
     Collections.sort(mutations, comparator());
 
