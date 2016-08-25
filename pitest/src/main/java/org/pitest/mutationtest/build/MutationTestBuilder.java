@@ -14,13 +14,7 @@
  */
 package org.pitest.mutationtest.build;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 import org.pitest.classinfo.ClassName;
 import org.pitest.coverage.TestInfo;
@@ -31,6 +25,14 @@ import org.pitest.mutationtest.DetectionStatus;
 import org.pitest.mutationtest.MutationAnalyser;
 import org.pitest.mutationtest.MutationResult;
 import org.pitest.mutationtest.engine.MutationDetails;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 public class MutationTestBuilder {
 
@@ -53,9 +55,25 @@ public class MutationTestBuilder {
       final Collection<ClassName> codeClasses) {
     final List<MutationAnalysisUnit> tus = new ArrayList<MutationAnalysisUnit>();
 
-    final List<MutationDetails> mutations = FCollection.flatMap(codeClasses,
-        classToMutations());
+    List<MutationDetails> mutations3 = FCollection.flatMap(codeClasses, classToMutations());
+    List<MutationDetails> mutations2 = new ArrayList<MutationDetails>();
+    //tutaj dzieje sie magia
 
+  Integer i = 0;
+    for (MutationDetails m: mutations3) {
+
+      if ( i.equals(0) ) {
+        mutations2.add(m);
+        i = 1;
+      }
+      else  {
+        i = 0;
+      }
+    }
+
+
+    final List<MutationDetails> mutations = mutations2;
+    
     Collections.sort(mutations, comparator());
 
     final Collection<MutationResult> analysedMutations = this.analyser
