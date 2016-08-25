@@ -18,6 +18,7 @@ package org.pitest.mutationtest.build;
 
 import org.pitest.classinfo.ClassName;
 import org.pitest.coverage.TestInfo;
+import org.pitest.extensions.MutationRandomizerSingleton;
 import org.pitest.functional.F;
 import org.pitest.functional.FCollection;
 import org.pitest.functional.prelude.Prelude;
@@ -58,6 +59,10 @@ public class MutationTestBuilder {
     List<MutationDetails> mutations3 = FCollection.flatMap(codeClasses, classToMutations());
     List<MutationDetails> mutations2 = new ArrayList<MutationDetails>();
     //tutaj dzieje sie magia
+
+
+    MutationRandomizerSingleton.getInstance().hokusPokus();
+
 
   Integer i = 0;
     for (MutationDetails m: mutations3) {
