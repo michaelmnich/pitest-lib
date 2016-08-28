@@ -2,6 +2,8 @@ package org.pitest.extensions;
 
 import org.pitest.mutationtest.engine.MutationDetails;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +25,18 @@ public class MutationRandomizerSingleton {
         // Exists only to defeat instantiation.
         //tutja bedzie jakis confg reader;
 
-        mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(100,50));
+        MutationConfig config = new MutationConfig();
+        File f = new File("d:\\config.ini");
+        try {
+            config.readConfig(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(100,50));
+        mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(config.GetMutatroScale("INVERT_NEGS"),config.GetMutatorProbabilty("INVERT_NEGS")));
+
+
 //        "INVERT_NEGS",
 //        "RETURN_VALS",
 //        "INLINE_CONSTS",
