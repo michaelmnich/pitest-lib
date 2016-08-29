@@ -5,6 +5,7 @@ import org.pitest.mutationtest.engine.MutationDetails;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -16,6 +17,33 @@ public class MutationRandomizerSingleton {
     private static MutationRandomizerSingleton instance = null;
     private Integer config =0;
     private LinkedHashMap<String, ProbabilityEvaluator> mutators = new LinkedHashMap<String, ProbabilityEvaluator>();
+    MutationConfig configData;
+    private List<String> mutansNames = new ArrayList<String>(Arrays.asList(
+        "INVERT_NEGS",
+        "RETURN_VALS",
+        "INLINE_CONSTS",
+        "MATH",
+        "VOID_METHOD_CALLS",
+        "NEGATE_CONDITIONALS",
+        "CONDITIONALS_BOUNDARY",
+        "INCREMENTS",
+        "REMOVE_INCREMENTS",
+        "NON_VOID_METHOD_CALLS",
+        "CONSTRUCTOR_CALLS",
+        "REMOVE_CONDITIONALS_EQ_IF",
+        "REMOVE_CONDITIONALS_EQ_ELSE",
+        "REMOVE_CONDITIONALS_ORD_IF",
+        "REMOVE_CONDITIONALS_ORD_ELSE",
+        "REMOVE_CONDITIONALS",
+        "EXPERIMENTAL_MEMBER_VARIABLE",
+        "EXPERIMENTAL_SWITCH",
+        "EXPERIMENTAL_ARGUMENT_PROPAGATION",
+        //Jakies dziwne grupy
+        "REMOVE_SWITCH",
+        "DEFAULTS",
+        "STRONGER",
+        "ALL" //hmmm?
+    ));
     //-------------------------------------------------------------------------------------------------------------
 
     /**
@@ -24,17 +52,38 @@ public class MutationRandomizerSingleton {
     private MutationRandomizerSingleton() {
         // Exists only to defeat instantiation.
         //tutja bedzie jakis confg reader;
-
-        MutationConfig config = new MutationConfig();
-        File f = new File("d:\\config.ini");
+        //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
+        configData = new MutationConfig();
+        File f = new File("d:\\config.ini"); //to jakos inaczej podac trzeba
         try {
-            config.readConfig(f);
+            configData.readConfig(f);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
+    }
+
+    /**
+     *  Przygotowuje liste mutantów wraz z prawdopodobienstwami an podstawie danych z configData
+     */
+    private void setUpDataFromConfig(){
         //mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(100,50));
-        mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(config.GetMutatroScale("INVERT_NEGS"),config.GetMutatorProbabilty("INVERT_NEGS")));
+        //po koleji jesli takig mutotora w konfigu nie bedzdie niec dha prawdopodobienstwo pewne
+        for (String mutantName:mutansNames) {
+            int scale =0;
+            int probality =0;
+            if(configData.IsMutantKeyExist(mutantName)) {
+                scale =configData.GetMutatroScale(mutantName);
+                probality =configData.GetMutatorProbabilty(mutantName);
+                mutators.put(mutantName, new ProbabilityEvaluator(scale,probality ));
+
+            }else{
+                mutators.put( mutantName, new ProbabilityEvaluator(1,0));
+                System.out.println(mutantName +"scale: "+scale+", probabilty: 1 <- Mutant in config was unset.");
+            }
+
+        }
 
 
 //        "INVERT_NEGS",
@@ -74,6 +123,7 @@ public class MutationRandomizerSingleton {
            return noRandomize(inputMutationList);
         }
         else if(config.equals(1)){
+            setUpDataFromConfig();
            return fileInputRadndomizer(inputMutationList);
         }else{
             //tutaj ten bajesowski randomizer

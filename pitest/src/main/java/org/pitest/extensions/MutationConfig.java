@@ -74,6 +74,11 @@ public class MutationConfig {
         return mutatorConfig.get(key).Scale;
     }
 
+    public boolean IsMutantKeyExist(String key){
+        if(mutatorConfig.containsKey(key))return true;
+        else return false;
+    }
+
     public int GetMutatorProbabilty(String key){
         return (int) (mutatorConfig.get(key).Scale - (mutatorConfig.get(key).Scale* mutatorConfig.get(key).Probabilty));
     }
