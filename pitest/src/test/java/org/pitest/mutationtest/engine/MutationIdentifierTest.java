@@ -1,19 +1,16 @@
 package org.pitest.mutationtest.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.pitest.mutationtest.LocationMother.aLocation;
-import static org.pitest.mutationtest.LocationMother.aMutationId;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.pitest.mutationtest.LocationMother.aLocation;
+import static org.pitest.mutationtest.LocationMother.aMutationId;
 
 public class MutationIdentifierTest {
 
@@ -68,16 +65,16 @@ public class MutationIdentifierTest {
   @Test
   public void shouldMatchWhenIndexesOverlap() {
     MutationIdentifier a = new MutationIdentifier(aLocation().build(),
-        new HashSet<Integer>(Arrays.asList(1, 2)), "M");
-    MutationIdentifier b = new MutationIdentifier(aLocation().build(), 1, "M");
+        new HashSet<Integer>(Arrays.asList(1, 2)), "M", "MUTATOR");
+    MutationIdentifier b = new MutationIdentifier(aLocation().build(), 1, "M", "MUTATOR");
     assertTrue(a.matches(b));
   }
 
   @Test
   public void shouldNotMatchWhenIndexesDoNotOverlap() {
     MutationIdentifier a = new MutationIdentifier(aLocation().build(),
-        new HashSet<Integer>(100, 200), "M");
-    MutationIdentifier b = new MutationIdentifier(aLocation().build(), 1, "M");
+        new HashSet<Integer>(100, 200), "M", "MUTATOR");
+    MutationIdentifier b = new MutationIdentifier(aLocation().build(), 1, "M", "MUTATOR");
     assertFalse(a.matches(b));
   }
 
@@ -98,9 +95,9 @@ public class MutationIdentifierTest {
   @Test
   public void shouldNotMatchWhenLocationsDiffer() {
     MutationIdentifier a = new MutationIdentifier(aLocation()
-        .withMethodDescription("X").build(), 1, "M");
+        .withMethodDescription("X").build(), 1, "M", "MUTATOR");
     MutationIdentifier b = new MutationIdentifier(aLocation()
-        .withMethodDescription("Y").build(), 1, "M");
+        .withMethodDescription("Y").build(), 1, "M", "MUTATOR");
     assertFalse(a.matches(b));
   }
 

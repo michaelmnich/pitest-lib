@@ -14,29 +14,20 @@
  */
 package org.pitest.mutationtest.engine.gregor.inlinedcode;
 
-import static org.pitest.functional.FCollection.bucket;
-import static org.pitest.functional.FCollection.map;
-import static org.pitest.functional.FCollection.mapTo;
-import static org.pitest.functional.prelude.Prelude.isEqualTo;
-import static org.pitest.functional.prelude.Prelude.not;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import org.pitest.functional.F;
 import org.pitest.functional.FCollection;
 import org.pitest.functional.FunctionalList;
 import org.pitest.mutationtest.engine.MutationDetails;
 import org.pitest.mutationtest.engine.MutationIdentifier;
 import org.pitest.util.Log;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
+
+import static org.pitest.functional.FCollection.*;
+import static org.pitest.functional.prelude.Prelude.isEqualTo;
+import static org.pitest.functional.prelude.Prelude.not;
 
 /**
  * Detects mutations on same line, but within different code blocks. This
@@ -133,7 +124,7 @@ public class InlinedFinallyBlockDetector implements InlinedCodeFilter {
     mapTo(value, mutationToIndex(), indexes);
 
     final MutationIdentifier id = new MutationIdentifier(first.getId()
-        .getLocation(), indexes, first.getId().getMutator());
+        .getLocation(), indexes, first.getId().getMutator(), first.getId().getMutatorEnumName());
 
     return new MutationDetails(id, first.getFilename(), first.getDescription(),
         first.getLineNumber(), first.getBlock());

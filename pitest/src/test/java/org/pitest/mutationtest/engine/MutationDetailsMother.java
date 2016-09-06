@@ -1,16 +1,16 @@
 package org.pitest.mutationtest.engine;
 
-import static org.pitest.mutationtest.LocationMother.aMutationId;
-
-import java.util.Collections;
-import java.util.List;
-
 import org.pitest.classinfo.ClassName;
 import org.pitest.coverage.TestInfo;
 import org.pitest.quickbuilder.Builder;
 import org.pitest.quickbuilder.Generator;
 import org.pitest.quickbuilder.SequenceBuilder;
 import org.pitest.quickbuilder.builders.QB;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.pitest.mutationtest.LocationMother.aMutationId;
 
 public class MutationDetailsMother {
 
@@ -79,7 +79,7 @@ public class MutationDetailsMother {
 
   public static MutationDetails makeMutation(final ClassName clazz) {
     return new MutationDetails(new MutationIdentifier(Location.location(clazz,
-        new MethodName("aMethod"), "()V"), 1, "mutatorId"), "foo.java",
+        new MethodName("aMethod"), "()V"), 1, "mutatorId", "MUTATOR"), "foo.java",
         "A mutation", 0, 0);
   }
 

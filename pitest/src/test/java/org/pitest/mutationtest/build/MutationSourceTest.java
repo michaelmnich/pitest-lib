@@ -1,15 +1,5 @@
 package org.pitest.mutationtest.build;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.pitest.mutationtest.LocationMother.aLocation;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,6 +17,16 @@ import org.pitest.mutationtest.engine.MutationEngine;
 import org.pitest.mutationtest.engine.MutationIdentifier;
 import org.pitest.mutationtest.filter.UnfilteredMutationFilter;
 import org.pitest.process.LaunchOptions;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.pitest.mutationtest.LocationMother.aLocation;
 
 public class MutationSourceTest {
 
@@ -98,7 +98,7 @@ public class MutationSourceTest {
 
   private MutationDetails makeMutation(final String method) {
     final MutationIdentifier id = new MutationIdentifier(aLocation()
-        .withClass(this.foo).withMethod(method).build(), 0, "mutator");
+        .withClass(this.foo).withMethod(method).build(), 0, "mutator" ,"MUTATOR");
     return new MutationDetails(id, "file", "desc", 1, 2);
   }
 

@@ -14,12 +14,12 @@
  */
 package org.pitest.mutationtest.engine;
 
+import org.pitest.classinfo.ClassName;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import org.pitest.classinfo.ClassName;
 
 /**
  * Uniquely identifies a mutation
@@ -44,19 +44,25 @@ public final class MutationIdentifier implements Comparable<MutationIdentifier> 
    * Name of the mutation operator that created this mutation
    */
   private final String        mutator;
+  /**
+   * Name of the mutation Real name form Class Enum
+   */
+  private final String        mutatorEnumName;
 
   public MutationIdentifier(final Location location, final int index,
-      final String mutatorUniqueId) {
-    this(location, Collections.singleton(index), mutatorUniqueId);
+      final String mutatorUniqueId,final String enumName ) {
+    this(location, Collections.singleton(index), mutatorUniqueId, enumName);
   }
 
   public MutationIdentifier(final Location location,
-      final Collection<Integer> indexes, final String mutatorUniqueId) {
+      final Collection<Integer> indexes, final String mutatorUniqueId, final String enumName) {
     this.location = location;
     this.indexes = new ArrayList<Integer>(indexes);
     this.mutator = mutatorUniqueId;
+    this.mutatorEnumName = enumName;
   }
 
+  public String getMutatorEnumName(){return mutatorEnumName;}
   /**
    * Returns the location of the mutations
    * 

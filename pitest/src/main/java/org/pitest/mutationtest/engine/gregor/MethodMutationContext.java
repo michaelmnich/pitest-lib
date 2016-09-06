@@ -1,12 +1,12 @@
 package org.pitest.mutationtest.engine.gregor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.pitest.mutationtest.engine.Location;
 import org.pitest.mutationtest.engine.MutationDetails;
 import org.pitest.mutationtest.engine.MutationIdentifier;
 import org.pitest.mutationtest.engine.gregor.analysis.InstructionCounter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 class MethodMutationContext implements MutationContext, InstructionCounter {
 
@@ -35,11 +35,11 @@ class MethodMutationContext implements MutationContext, InstructionCounter {
     registerMutation(details);
     return newId;
   }
-
+//NO zesz w dupe jego mac tutaj
   private MutationIdentifier getNextMutationIdentifer(
       final MethodMutatorFactory factory, final String className) {
     return new MutationIdentifier(this.location, this.instructionIndex,
-        factory.getGloballyUniqueId());
+        factory.getGloballyUniqueId(), factory.getName().replace("_MUTATOR","")); //BO na przykłąd NegateConditionalsMutator w nazie nie ma NEGATE_CONDITIONALS  tylko NEGATE_CONDITIONALS_MUTATOR tu widać ze w tym szalonym kodzie te wysylane stringi moglby by byc enumami alenie nieee bo sa dodane do jakiegos dictionery w gorge generatoze no zesz po co poco????!!!!!!!!!!
   }
 
   private void registerMutation(final MutationDetails details) {

@@ -4,10 +4,7 @@ import org.pitest.mutationtest.engine.MutationDetails;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by gosc on 25.08.2016.
@@ -15,7 +12,7 @@ import java.util.List;
 public class MutationRandomizerSingleton {
     //ZMIENNE------------------------------------------------------------------------------------------------------
     private static MutationRandomizerSingleton instance = null;
-    private Integer config =0;
+
     private LinkedHashMap<String, ProbabilityEvaluator> mutators = new LinkedHashMap<String, ProbabilityEvaluator>();
     MutationConfig configData;
     private List<String> mutansNames = new ArrayList<String>(Arrays.asList(
@@ -54,10 +51,14 @@ public class MutationRandomizerSingleton {
         //tutja bedzie jakis confg reader;
         //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
         configData = new MutationConfig();
-        File f = new File("d:\\config.ini"); //to jakos inaczej podac trzeba
+        String dir = "d:\\config.ini";
+        File f = new File(dir); //to jakos inaczej podac trzeba
         try {
             configData.readConfig(f);
         } catch (IOException e) {
+            System.out.println("==================================================================");
+            System.out.println("CONFIG FILE ERROR! Cheack file dir: "+dir);
+            System.out.println("==================================================================");
             e.printStackTrace();
         }
 
@@ -70,6 +71,10 @@ public class MutationRandomizerSingleton {
     private void setUpDataFromConfig(){
         //mutators.put( "INVERT_NEGS", new ProbabilityEvaluator(100,50));
         //po koleji jesli takig mutotora w konfigu nie bedzdie niec dha prawdopodobienstwo pewne
+        System.out.println("================================================================================");
+        Date d =new Date(System.currentTimeMillis());
+        System.out.println("EXTENDED PIT >> " + d.toString() +" >> Imput Mutation Configuration");
+        System.out.println("================================================================================");
         for (String mutantName:mutansNames) {
             int scale =0;
             int probality =0;
@@ -77,13 +82,14 @@ public class MutationRandomizerSingleton {
                 scale =configData.GetMutatroScale(mutantName);
                 probality =configData.GetMutatorProbabilty(mutantName);
                 mutators.put(mutantName, new ProbabilityEvaluator(scale,probality ));
-
+                System.out.format("%-15s%-15s%-15s\n",mutantName,  "scale: "+ scale, "probabilty: " + probality);
             }else{
                 mutators.put( mutantName, new ProbabilityEvaluator(1,0));
-                System.out.println(mutantName +"scale: "+scale+", probabilty: 1 <- Mutant in config was unset.");
+                System.out.format("%-15s%-15s%-15s\n",mutantName, "scale: "+ scale, "probabilty: 1 <- Mutant in config was unset.");
             }
 
         }
+        System.out.println("================================================================================");
 
 
 //        "INVERT_NEGS",
@@ -119,10 +125,10 @@ public class MutationRandomizerSingleton {
      */
     public List<MutationDetails>  Randomize(List<MutationDetails> inputMutationList ){
 
-        if(config.equals(0)){
+        if( configData.MutationMode()==0){
            return noRandomize(inputMutationList);
         }
-        else if(config.equals(1)){
+        else if(configData.MutationMode()==1){
             setUpDataFromConfig();
            return fileInputRadndomizer(inputMutationList);
         }else{
@@ -152,9 +158,9 @@ public class MutationRandomizerSingleton {
         for (MutationDetails m: inputMutationList) {
             //jesli dany mutant wystepuje w kolekcji mutatorów
             //pobierz jego prawdopodobienstwo
-            if(mutators.containsKey(m.getId().getMutator())){
+            if(mutators.containsKey(m.getId().getMutatorEnumName())){
                 //mutators bobierz prawdopodobienstwo
-                if(mutators.get(m.getId().getMutator()).draw()) outputMutationLIst.add(m);
+                if(mutators.get(m.getId().getMutatorEnumName()).draw()) outputMutationLIst.add(m);
             }
 
         }

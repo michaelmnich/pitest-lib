@@ -74,7 +74,7 @@ public class LocationMother {
     return new Generator<MutationIdentifierBuilder, MutationIdentifier>() {
       @Override
       public MutationIdentifier generate(MutationIdentifierBuilder b) {
-        return new MutationIdentifier(b._Location(), b._Index(), b._Mutator());
+        return new MutationIdentifier(b._Location(), b._Index(), b._Mutator(), "none"); //DUPA
       }
     };
   }
