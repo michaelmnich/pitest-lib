@@ -22,6 +22,16 @@
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.1.11-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.1.11-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 
