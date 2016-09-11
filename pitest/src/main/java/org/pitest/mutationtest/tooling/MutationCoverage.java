@@ -14,16 +14,6 @@
  */
 package org.pitest.mutationtest.tooling;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import org.pitest.classinfo.ClassByteArraySource;
 import org.pitest.classinfo.ClassInfo;
 import org.pitest.classinfo.ClassName;
@@ -33,22 +23,13 @@ import org.pitest.classpath.CodeSource;
 import org.pitest.coverage.CoverageDatabase;
 import org.pitest.coverage.CoverageGenerator;
 import org.pitest.coverage.TestInfo;
+import org.pitest.extensions.MutationRandomizerSingleton;
 import org.pitest.functional.FCollection;
 import org.pitest.functional.prelude.Prelude;
 import org.pitest.help.Help;
 import org.pitest.help.PitHelpError;
-import org.pitest.mutationtest.HistoryStore;
-import org.pitest.mutationtest.ListenerArguments;
-import org.pitest.mutationtest.MutationAnalyser;
-import org.pitest.mutationtest.MutationConfig;
-import org.pitest.mutationtest.MutationResultListener;
-import org.pitest.mutationtest.build.MutationAnalysisUnit;
-import org.pitest.mutationtest.build.MutationGrouper;
-import org.pitest.mutationtest.build.MutationSource;
-import org.pitest.mutationtest.build.MutationTestBuilder;
-import org.pitest.mutationtest.build.PercentAndConstantTimeoutStrategy;
-import org.pitest.mutationtest.build.TestPrioritiser;
-import org.pitest.mutationtest.build.WorkerFactory;
+import org.pitest.mutationtest.*;
+import org.pitest.mutationtest.build.*;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationEngine;
@@ -62,6 +43,12 @@ import org.pitest.mutationtest.statistics.Score;
 import org.pitest.util.Log;
 import org.pitest.util.StringUtil;
 import org.pitest.util.Timings;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class MutationCoverage {
 
@@ -181,6 +168,10 @@ public class MutationCoverage {
     if (!this.data.isVerbose()) {
       ls.add(new SpinnerListener(System.out));
     }
+
+    //Tutaj dodac swojego listnera -------------------
+    ls.add(MutationRandomizerSingleton.getInstance().GetBlockReportListner());
+    ////Tutaj dodac swojego listnera -------------------
     return ls;
   }
 

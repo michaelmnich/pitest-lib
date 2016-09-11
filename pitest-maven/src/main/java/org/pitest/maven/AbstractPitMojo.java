@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class AbstractPitMojo extends AbstractMojo {
+public  class AbstractPitMojo extends AbstractMojo {
 
   protected final Predicate<Artifact> filter;
 
@@ -189,7 +189,7 @@ public class AbstractPitMojo extends AbstractMojo {
   /**
    * Maximum number of mutations to include in a single analysis unit.
    * 
-   * If set to 1 will analyse very slowly, but with string (jvm per mutant)
+   * If set to 1 will AnalyseAndMutateProject very slowly, but with string (jvm per mutant)
    * isolation.
    *
    */
@@ -339,7 +339,7 @@ public class AbstractPitMojo extends AbstractMojo {
             "Found shared classpath plugin : " + each.description());
       }
 
-      final Option<CombinedStatistics> result = analyse();
+      final Option<CombinedStatistics> result = AnalyseAndMutateProject();
       if (result.hasSome()) {
         throwErrorIfScoreBelowThreshold(result.value().getMutationStatistics());
         throwErrorIfMoreThanMaximumSurvivors(result.value().getMutationStatistics());
@@ -392,12 +392,13 @@ public class AbstractPitMojo extends AbstractMojo {
     }
   }
 
-  protected Option<CombinedStatistics> analyse() throws MojoExecutionException {
+  protected Option<CombinedStatistics> AnalyseAndMutateProject() throws MojoExecutionException {
     final ReportOptions data = new MojoToReportOptionsConverter(this,
         new SurefireConfigConverter(), this.filter).convert();
     return Option.some(this.goalStrategy.execute(detectBaseDir(), data,
         this.plugins, this.environmentVariables));
   }
+
 
   protected File detectBaseDir() {
     // execution project doesn't seem to always be available.

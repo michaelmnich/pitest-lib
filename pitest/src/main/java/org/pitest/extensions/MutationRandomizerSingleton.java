@@ -1,6 +1,7 @@
 package org.pitest.extensions;
 
 import org.pitest.mutationtest.engine.MutationDetails;
+import org.pitest.mutationtest.report.block.BlockReportListner;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,33 +15,34 @@ public class MutationRandomizerSingleton {
     private static MutationRandomizerSingleton instance = null;
 
     private LinkedHashMap<String, ProbabilityEvaluator> mutators = new LinkedHashMap<String, ProbabilityEvaluator>();
-    MutationConfig configData;
+            MutationConfig configData;
     private List<String> mutansNames = new ArrayList<String>(Arrays.asList(
-        "INVERT_NEGS",
-        "RETURN_VALS",
-        "INLINE_CONSTS",
-        "MATH",
-        "VOID_METHOD_CALLS",
-        "NEGATE_CONDITIONALS",
-        "CONDITIONALS_BOUNDARY",
-        "INCREMENTS",
-        "REMOVE_INCREMENTS",
-        "NON_VOID_METHOD_CALLS",
-        "CONSTRUCTOR_CALLS",
-        "REMOVE_CONDITIONALS_EQ_IF",
-        "REMOVE_CONDITIONALS_EQ_ELSE",
-        "REMOVE_CONDITIONALS_ORD_IF",
-        "REMOVE_CONDITIONALS_ORD_ELSE",
-        "REMOVE_CONDITIONALS",
-        "EXPERIMENTAL_MEMBER_VARIABLE",
-        "EXPERIMENTAL_SWITCH",
-        "EXPERIMENTAL_ARGUMENT_PROPAGATION",
-        //Jakies dziwne grupy
-        "REMOVE_SWITCH",
-        "DEFAULTS",
-        "STRONGER",
-        "ALL" //hmmm?
+            "INVERT_NEGS",
+            "RETURN_VALS",
+            "INLINE_CONSTS",
+            "MATH",
+            "VOID_METHOD_CALLS",
+            "NEGATE_CONDITIONALS",
+            "CONDITIONALS_BOUNDARY",
+            "INCREMENTS",
+            "REMOVE_INCREMENTS",
+            "NON_VOID_METHOD_CALLS",
+            "CONSTRUCTOR_CALLS",
+            "REMOVE_CONDITIONALS_EQ_IF",
+            "REMOVE_CONDITIONALS_EQ_ELSE",
+            "REMOVE_CONDITIONALS_ORD_IF",
+            "REMOVE_CONDITIONALS_ORD_ELSE",
+            "REMOVE_CONDITIONALS",
+            "EXPERIMENTAL_MEMBER_VARIABLE",
+            "EXPERIMENTAL_SWITCH",
+            "EXPERIMENTAL_ARGUMENT_PROPAGATION",
+            //Jakies dziwne grupy
+            "REMOVE_SWITCH",
+            "DEFAULTS",
+            "STRONGER",
+            "ALL" //hmmm?
     ));
+    private BlockReportListner blockListner;
     //-------------------------------------------------------------------------------------------------------------
 
     /**
@@ -48,6 +50,11 @@ public class MutationRandomizerSingleton {
      */
     private MutationRandomizerSingleton() {
         // Exists only to defeat instantiation.
+
+
+
+        blockListner = new BlockReportListner();
+
         //tutja bedzie jakis confg reader;
         //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
         configData = new MutationConfig();
@@ -90,52 +97,6 @@ public class MutationRandomizerSingleton {
 
         }
         System.out.println("================================================================================");
-
-
-//        "INVERT_NEGS",
-//        "RETURN_VALS",
-//        "INLINE_CONSTS",
-//        "MATH",
-//        "VOID_METHOD_CALLS",
-//        "NEGATE_CONDITIONALS",
-//        "CONDITIONALS_BOUNDARY",
-//        "INCREMENTS",
-//        "REMOVE_INCREMENTS",
-//        "NON_VOID_METHOD_CALLS",
-//        "CONSTRUCTOR_CALLS",
-//        "REMOVE_CONDITIONALS_EQ_IF",
-//        "REMOVE_CONDITIONALS_EQ_ELSE",
-//        "REMOVE_CONDITIONALS_ORD_IF",
-//        "REMOVE_CONDITIONALS_ORD_ELSE",
-//        "REMOVE_CONDITIONALS",
-//        "EXPERIMENTAL_MEMBER_VARIABLE",
-//        "EXPERIMENTAL_SWITCH",
-//        "EXPERIMENTAL_ARGUMENT_PROPAGATION",
-//        //Jakies dziwne grupy
-//        "REMOVE_SWITCH",
-//        "DEFAULTS",
-//        "STRONGER",
-//        "ALL" //hmmm?
-    }
-
-    /**
-     *
-     * @param inputMutationList
-     * @return zwraca liste wstępnie przygotowannych mutantów. Lista trojakeigo rodzaju Identycznościowa, Losowa z pliku, Losowa bajes.
-     */
-    public List<MutationDetails>  Randomize(List<MutationDetails> inputMutationList ){
-
-        if( configData.MutationMode()==0){
-           return noRandomize(inputMutationList);
-        }
-        else if(configData.MutationMode()==1){
-            setUpDataFromConfig();
-           return fileInputRadndomizer(inputMutationList);
-        }else{
-            //tutaj ten bajesowski randomizer
-            //a narazie return null
-            return null;
-        }
     }
 
     /**
@@ -166,6 +127,31 @@ public class MutationRandomizerSingleton {
         }
         return outputMutationLIst;
     }
+
+    /**
+     *
+     * @param inputMutationList
+     * @return zwraca liste wstępnie przygotowannych mutantów. Lista trojakeigo rodzaju Identycznościowa, Losowa z pliku, Losowa bajes.
+     */
+    public List<MutationDetails>  Randomize(List<MutationDetails> inputMutationList ){
+
+        if( configData.MutationMode()==0){
+           return noRandomize(inputMutationList);
+        }
+        else if(configData.MutationMode()==1){
+            setUpDataFromConfig();
+           return fileInputRadndomizer(inputMutationList);
+        }else{
+            //tutaj ten bajesowski randomizer
+            //a narazie return null
+            return null;
+        }
+    }
+
+    public BlockReportListner GetBlockReportListner(){
+        return this.blockListner;
+    }
+
 
     /**
      *

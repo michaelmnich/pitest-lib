@@ -10,4 +10,5 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 @Mojo(name = "mutationCoverage", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST)
 public class PitMojo extends AbstractPitMojo {
 
+
 }

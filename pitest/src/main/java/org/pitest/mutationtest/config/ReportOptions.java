@@ -14,27 +14,7 @@
  */
 package org.pitest.mutationtest.config;
 
-import static org.pitest.functional.prelude.Prelude.not;
-import static org.pitest.functional.prelude.Prelude.or;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
-
-import org.pitest.classpath.ClassFilter;
-import org.pitest.classpath.ClassPath;
-import org.pitest.classpath.ClassPathRoot;
-import org.pitest.classpath.PathFilter;
-import org.pitest.classpath.ProjectClassPaths;
+import org.pitest.classpath.*;
 import org.pitest.functional.F;
 import org.pitest.functional.FCollection;
 import org.pitest.functional.Option;
@@ -51,6 +31,12 @@ import org.pitest.testapi.execute.Pitest;
 import org.pitest.util.Glob;
 import org.pitest.util.ResultOutputStrategy;
 import org.pitest.util.Unchecked;
+
+import java.io.*;
+import java.util.*;
+
+import static org.pitest.functional.prelude.Prelude.not;
+import static org.pitest.functional.prelude.Prelude.or;
 
 // FIXME move all logic to SettingsFactory and turn into simple bean
 

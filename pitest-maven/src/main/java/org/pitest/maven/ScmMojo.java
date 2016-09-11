@@ -1,27 +1,9 @@
 package org.pitest.maven;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.scm.ChangeFile;
-import org.apache.maven.scm.ChangeSet;
-import org.apache.maven.scm.ScmException;
-import org.apache.maven.scm.ScmFile;
-import org.apache.maven.scm.ScmFileSet;
-import org.apache.maven.scm.ScmFileStatus;
+import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.scm.*;
 import org.apache.maven.scm.command.changelog.ChangeLogScmRequest;
 import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.status.StatusScmResult;
@@ -35,6 +17,9 @@ import org.pitest.functional.predicate.Predicate;
 import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.tooling.CombinedStatistics;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * Goal which runs a coverage mutation report only for files that have been
@@ -95,7 +80,7 @@ public class ScmMojo extends AbstractPitMojo {
   }
 
   @Override
-  protected Option<CombinedStatistics> analyse() throws MojoExecutionException {
+  protected Option<CombinedStatistics> AnalyseAndMutateProject() throws MojoExecutionException {
 
     this.targetClasses = makeConcreteList(findModifiedClassNames());
 
