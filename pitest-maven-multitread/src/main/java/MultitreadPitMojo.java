@@ -18,11 +18,11 @@ class MultitreadPitMojo extends AbstractPitMojo {
 
     protected Option<CombinedStatistics> AnalyseAndMutateProject() throws MojoExecutionException {
 
-
         final ReportOptions data = new MojoToReportOptionsConverter(this, new SurefireConfigConverter(), this.filter).convert();
 
+        CombinedStatistics ex =this.goalStrategy.execute(detectBaseDir(), data, this.plugins, getEnvironmentVariables());
 
-        return Option.some(this.goalStrategy.execute(detectBaseDir(), data, this.plugins, getEnvironmentVariables()));
+        return Option.some(ex);
     }
 
 
