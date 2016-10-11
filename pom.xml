@@ -66,8 +66,6 @@
 		<module>pitest-html-report</module>
 		<module>pitest-maven-verification</module>
 		<module>pitest-maven-multitread</module>
-		<module>../Playgorund</module>
-		<module>../Playground</module>
 	</modules>
 
 	<prerequisites>
