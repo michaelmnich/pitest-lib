@@ -307,10 +307,18 @@ public  class AbstractPitMojo extends AbstractMojo {
   protected final GoalStrategy        goalStrategy;
 
   public AbstractPitMojo() {
-    this(new RunPitStrategy(), new DependencyFilter(new PluginServices(
-        AbstractPitMojo.class.getClassLoader())), new PluginServices(
-        AbstractPitMojo.class.getClassLoader()));
+    ClassLoader loader = AbstractPitMojo.class.getClassLoader();
+    GoalStrategy gs = new RunPitStrategy();
+    Predicate<Artifact> pa = new DependencyFilter(new PluginServices(AbstractPitMojo.class.getClassLoader()));
+    PluginServices plug = new PluginServices(loader);
+    this.goalStrategy = gs;
+    this.filter = pa;
+    this.plugins = plug;
+    // this(new RunPitStrategy(),  );
+
+
     System.out.println("DUPA JEGO MAć!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
   }
 
   public AbstractPitMojo(final GoalStrategy strategy, final Predicate<Artifact> filter,

@@ -26,18 +26,18 @@ public class PitMojoTest extends BasePitMojoTest {
   public void setUp() throws Exception {
     super.setUp();
   }
-//
-//  public void testRunsAMutationReportWhenMutationCoverageGoalTrigered()
-////      throws Exception {
-////    this.testee = createPITMojo(createPomWithConfiguration(""));
-////    final Build build = new Build();
-////    build.setOutputDirectory("foo");
-////    String s = build.getSourceDirectory();
-////    this.testee.getProject().setBuild(build);
-////    this.testee.execute();
-////    verify(this.executionStrategy).execute(any(File.class),
-////        any(ReportOptions.class), any(PluginServices.class), anyMap());
-//  }
+
+  public void testRunsAMutationReportWhenMutationCoverageGoalTrigered()
+      throws Exception {
+    this.testee = createPITMojo(createPomWithConfiguration(""));
+    final Build build = new Build();
+    build.setOutputDirectory("foo");
+    String s = build.getSourceDirectory();
+    this.testee.getProject().setBuild(build);
+    this.testee.execute();
+    verify(this.executionStrategy).execute(any(File.class),
+        any(ReportOptions.class), any(PluginServices.class), anyMap());
+  }
 
 
   public void testOMG()
