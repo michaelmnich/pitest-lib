@@ -23,7 +23,9 @@ import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.mutationtest.tooling.EntryPoint;
 import org.pitest.util.Unchecked;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Entry point for command line interface
@@ -38,22 +40,23 @@ public class MutationCoverageReport {
 
 //dupa
     String args2[] = new String[]{
-            "",
-            "",
-            "",
-            "",
-            "",
-            "-cp D:\\Doktorat\\IOgr602-master\\IOgr602-master\\target\\test-classes\\;D:\\Doktorat\\IOgr602-master\\IOgr602-master\\target\\classes\\;C:\\pit\\pitest-1.1.11-SNAPSHOT.jar;C:\\pit\\junit-4.12.jar;C:\\pit\\pitest-command-line-1.1.11-SNAPSHOT.jar;C:\\Program Files\\Java\\jdk1.7.0_79\\bin",
-                "--reportDir D:\\trash\\",
-                "--targetClasses matrixlibrary.*," ,
-                "--targetTests matrixlibrary.*,",
-                "--sourceDirs D:\\Doktorat\\IOgr602-master (1)\\IOgr602-master\\",
+            "--classPath",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
+            "--reportDir",
+            "D:\\trash\\",
+            "--targetClasses",
+            "matrixlibrary.*",
+            "--targetTests",
+            "matrixlibrary.*",
+            "--sourceDirs",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\"};
 
+    System.out.println("ARGUMENTY------------------------------------------------------------------");
+    for (String s:args) {
+      System.out.println(s);
 
-            "",};
-
-
-
+    }
+    System.out.println("ARGUMENTY------------------------------------------------------------------");
     final ParseResult pr = parser.parse(args2);
 
     if (!pr.isOk()) {
@@ -62,6 +65,15 @@ public class MutationCoverageReport {
     } else {
       final ReportOptions data = pr.getOptions();
 
+      List<String> cp =  Arrays.asList(
+              "D:\\Doktorat\\pitcmd\\pitest-1.1.11-SNAPSHOT.jar",
+              "D:\\Doktorat\\pitcmd\\pitest-command-line-1.1.11-SNAPSHOT.jar",
+              "C:\\junit\\hamcrest-core-1.3.jar",
+              "C:\\junit\\junit-4.12.jar",
+              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\",
+              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\"
+              );
+      data.setClassPathElements(cp);
       final CombinedStatistics stats = runReport(data, plugins);
 
       throwErrorIfScoreBelowCoverageThreshold(stats.getCoverageSummary(),
