@@ -66,6 +66,7 @@
 		<module>pitest-html-report</module>
 		<module>pitest-maven-verification</module>
 		<module>pitest-maven-multitread</module>
+		<module>SAM-System</module>
 	</modules>
 
 	<prerequisites>
