@@ -34,54 +34,102 @@ public class MutationCoverageReport {
 
   public static void main(final String[] args) {
 
-    final PluginServices plugins = PluginServices.makeForContextLoader();
-    final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
 
-
-//dupa
+        String args1[] = new String[]{
+            "--classPath",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
+            "--reportDir",
+            "D:\\trash\\",
+            "--targetClasses",
+            "matrixlibrary.IMatrixImpl*",
+            "--targetTests",
+            "matrixlibrary.*",
+            "--sourceDirs",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\"};
     String args2[] = new String[]{
             "--classPath",
             "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
             "--reportDir",
             "D:\\trash\\",
             "--targetClasses",
-            "matrixlibrary.*",
+            "matrixlibrary.IMatrixMathImpl*",
             "--targetTests",
             "matrixlibrary.*",
             "--sourceDirs",
             "D:\\Doktorat\\PitPlayground\\IOgr602-master\\"};
 
-    System.out.println("ARGUMENTY------------------------------------------------------------------");
-    for (String s:args) {
-      System.out.println(s);
-
-    }
-    System.out.println("ARGUMENTY------------------------------------------------------------------");
-    final ParseResult pr = parser.parse(args2);
-
-    if (!pr.isOk()) {
-      parser.printHelp();
-      System.out.println(">>>> " + pr.getErrorMessage().value());
-    } else {
-      final ReportOptions data = pr.getOptions();
-
-      List<String> cp =  Arrays.asList(
-              "D:\\Doktorat\\pitcmd\\pitest-1.1.11-SNAPSHOT.jar",
-              "D:\\Doktorat\\pitcmd\\pitest-command-line-1.1.11-SNAPSHOT.jar",
-              "C:\\junit\\hamcrest-core-1.3.jar",
+       List<String> cp1 =  Arrays.asList(
+              "D:\\doktorat\\pitest-lib\\pitest\\target\\pitest-1.1.11-SNAPSHOT.jar",
+                  "C:\\junit\\hamcrest-core-1.3.jar",
               "C:\\junit\\junit-4.12.jar",
               "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\",
               "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\"
               );
-      data.setClassPathElements(cp);
-      final CombinedStatistics stats = runReport(data, plugins);
+    List<String> cp2 =  Arrays.asList(
+            "D:\\doktorat\\pitest-lib\\pitest\\target\\pitest-1.1.11-SNAPSHOT.jar",
+            "C:\\junit\\hamcrest-core-1.3.jar",
+            "C:\\junit\\junit-4.12.jar",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\",
+            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\"
+    );
 
-      throwErrorIfScoreBelowCoverageThreshold(stats.getCoverageSummary(),
-          data.getCoverageThreshold());
-      throwErrorIfScoreBelowMutationThreshold(stats.getMutationStatistics(),
-          data.getMutationThreshold());
-      throwErrorIfMoreThanMaxSuvivingMutants(stats.getMutationStatistics(), data.getMaximumAllowedSurvivors());
-    }
+    DummyWorker dm1 = new DummyWorker();
+    DummyWorker dm2 = new DummyWorker();
+    dm1.Init(args1,cp1);
+    dm2.Init(args2,cp2);
+
+    Thread thread1 = new Thread(dm1);
+    Thread thread2 = new Thread(dm2);
+    thread1.start();
+    thread2.start();
+
+//    final PluginServices plugins = PluginServices.makeForContextLoader();
+//    final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
+//
+//
+////dupa
+//    String args2[] = new String[]{
+//            "--classPath",
+//            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
+//            "--reportDir",
+//            "D:\\trash\\",
+//            "--targetClasses",
+//            "matrixlibrary.*",
+//            "--targetTests",
+//            "matrixlibrary.*",
+//            "--sourceDirs",
+//            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\"};
+//
+//    System.out.println("ARGUMENTY------------------------------------------------------------------");
+//    for (String s:args) {
+//      System.out.println(s);
+//
+//    }
+//    System.out.println("ARGUMENTY------------------------------------------------------------------");
+//    final ParseResult pr = parser.parse(args2);
+//
+//    if (!pr.isOk()) {
+//      parser.printHelp();
+//      System.out.println(">>>> " + pr.getErrorMessage().value());
+//    } else {
+//      final ReportOptions data = pr.getOptions();
+//
+//      List<String> cp =  Arrays.asList(
+//              "D:\\doktorat\\pitest-lib\\pitest\\target\\pitest-1.1.11-SNAPSHOT.jar",
+//                  "C:\\junit\\hamcrest-core-1.3.jar",
+//              "C:\\junit\\junit-4.12.jar",
+//              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\",
+//              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\"
+//              );
+//      data.setClassPathElements(cp);
+//      final CombinedStatistics stats = runReport(data, plugins);
+//
+//      throwErrorIfScoreBelowCoverageThreshold(stats.getCoverageSummary(),
+//          data.getCoverageThreshold());
+//      throwErrorIfScoreBelowMutationThreshold(stats.getMutationStatistics(),
+//          data.getMutationThreshold());
+//      throwErrorIfMoreThanMaxSuvivingMutants(stats.getMutationStatistics(), data.getMaximumAllowedSurvivors());
+//    }
 
   }
 
