@@ -38,7 +38,7 @@ public class MutationCoverageReport {
     final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
 
 
-
+//dupa
     String args2[] = new String[]{
             "--classPath",
             "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
