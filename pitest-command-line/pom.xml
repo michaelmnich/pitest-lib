@@ -24,7 +24,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.pitest.mutationtest.commandline.MutationCoverageReport</mainClass>
+							<mainClass>org.pitest.mutationtest.commandline.MainWorker</mainClass>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<index>true</index>

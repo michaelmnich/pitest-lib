@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 
 /**
- * Created by gosc on 27.08.2016.
+ * Created by Michał Mnich  on 27.08.2016.
  */
 public class MutationConfig {
 

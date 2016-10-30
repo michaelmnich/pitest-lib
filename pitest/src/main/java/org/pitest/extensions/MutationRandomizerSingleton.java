@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by gosc on 25.08.2016.
+ * Created by Michał Mnich on 25.08.2016.
  */
 public class MutationRandomizerSingleton {
     //ZMIENNE------------------------------------------------------------------------------------------------------
