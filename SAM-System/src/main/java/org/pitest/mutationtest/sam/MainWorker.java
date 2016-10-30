@@ -20,6 +20,7 @@ import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.config.ProjectConfig;
+import org.pitest.mutationtest.sam.web.WebSocketSerwer;
 import org.pitest.mutationtest.statistics.MutationStatistics;
 import org.pitest.mutationtest.tooling.AnalysisResult;
 import org.pitest.mutationtest.tooling.CombinedStatistics;
@@ -36,57 +37,39 @@ public class MainWorker {
 
   public static void main(final String[] args) {
 
+    WebSocketSerwer workerSerwer = new WebSocketSerwer();
+    workerSerwer.Start(8080);
 
+  }
+
+
+
+    private void RunnMutation(){
+    //KONFIGURACJE-------------------------------------------------------------
     final PluginServices plugins = PluginServices.makeForContextLoader();
     final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
     IProjectMetaData pmd = new FromFileMetaData();
-
-//dupa
     String args2[] = pmd.GetMetaData();
-//            new String[]{
-//            "--classPath",
-//            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\,D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\",
-//            "--reportDir",
-//            "D:\\trash\\",
-//            "--targetClasses",
-//            "matrixlibrary.*",
-//            "--targetTests",
-//            "matrixlibrary.*",
-//            "--sourceDirs",
-//            "D:\\Doktorat\\PitPlayground\\IOgr602-master\\"};
+    ProjectConfig pc= new ProjectConfig();
+    List<String> cp = pc.cp;
+    //KONFIGURACJE-------------------------------------------------------------
 
-    System.out.println("ARGUMENTY------------------------------------------------------------------");
-    for (String s:args) {
-      System.out.println(s);
-
-    }
-    System.out.println("ARGUMENTY------------------------------------------------------------------");
     final ParseResult pr = parser.parse(args2);
-
-    if (!pr.isOk()) {
+    if (!pr.isOk())
+    {
       parser.printHelp();
       System.out.println(">>>> " + pr.getErrorMessage().value());
-    } else {
+    }
+    else
+    {
+      //PIT I JEGO MUTACJE-----------------------------------------------------
       final ReportOptions data = pr.getOptions();
-
-      ProjectConfig pc= new ProjectConfig();
-      List<String> cp = pc.cp;
-//              Arrays.asList(
-//              "D:\\Doktorat\\pitcmd\\pitest-1.1.11-SNAPSHOT.jar",
-//              "D:\\Doktorat\\pitcmd\\pitest-command-line-1.1.11-SNAPSHOT.jar",
-//              "C:\\junit\\hamcrest-core-1.3.jar",
-//              "C:\\junit\\junit-4.12.jar",
-//              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\test-classes\\",
-//              "D:\\Doktorat\\PitPlayground\\IOgr602-master\\target\\classes\\"
-//      );
       data.setClassPathElements(cp);
       final CombinedStatistics stats = runReport(data, plugins);
-
-      throwErrorIfScoreBelowCoverageThreshold(stats.getCoverageSummary(),
-              data.getCoverageThreshold());
-      throwErrorIfScoreBelowMutationThreshold(stats.getMutationStatistics(),
-              data.getMutationThreshold());
+      throwErrorIfScoreBelowCoverageThreshold(stats.getCoverageSummary(), data.getCoverageThreshold());
+      throwErrorIfScoreBelowMutationThreshold(stats.getMutationStatistics(), data.getMutationThreshold());
       throwErrorIfMoreThanMaxSuvivingMutants(stats.getMutationStatistics(), data.getMaximumAllowedSurvivors());
+      //PIT I JEGO MUTACJE-----------------------------------------------------
     }
 
   }

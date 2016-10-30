@@ -9,7 +9,6 @@ import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.mutationtest.tooling.EntryPoint;
 import org.pitest.util.Unchecked;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class DummyWorker implements Runnable {
         final PluginServices plugins = PluginServices.makeForContextLoader();
         final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
 
-
         final ParseResult pr = parser.parse(input);
 
         if (!pr.isOk()) {
@@ -41,7 +39,7 @@ public class DummyWorker implements Runnable {
             System.out.println(">>>> " + pr.getErrorMessage().value());
         } else {
             final ReportOptions data = pr.getOptions();
-
+                int dupa;
             data.setClassPathElements(classpath);
             final CombinedStatistics stats = runReport(data, plugins);
 
