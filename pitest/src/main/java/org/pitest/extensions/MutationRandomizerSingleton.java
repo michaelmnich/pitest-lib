@@ -119,9 +119,9 @@ public class MutationRandomizerSingleton {
         for (MutationDetails m: inputMutationList) {
             //jesli dany mutant wystepuje w kolekcji mutatorów
             //pobierz jego prawdopodobienstwo
-            if(mutators.containsKey(m.getId().getMutatorEnumName())){
+            if(mutators.containsKey(m.getId().getMutatorEnumName())){//jeli dany mutant jest typu znajdujacego sie w liscie mutatorow
                 //mutators bobierz prawdopodobienstwo
-                if(mutators.get(m.getId().getMutatorEnumName()).draw()) outputMutationLIst.add(m);
+                if(mutators.get(m.getId().getMutatorEnumName()).draw()) outputMutationLIst.add(m);//wylosuj czy dodjaemy mutnta czy nie
             }
 
         }

@@ -27,6 +27,7 @@ import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.mutationtest.tooling.EntryPoint;
 import org.pitest.util.Unchecked;
 
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +39,14 @@ public class MainWorker {
   public static void main(final String[] args) {
 
     WebSocketSerwer workerSerwer = new WebSocketSerwer();
-    workerSerwer.Start(8080);
+    String client = JOptionPane.showInputDialog("Coonet to other serwer" );
+    if(client.equals("yes")){
+      System.out.println("Coonecting to serwer");
+      workerSerwer.ConnectClient("dupa",12);
+    }
+
+    String port = JOptionPane.showInputDialog("Enter Port" );
+    workerSerwer.Start(Integer.valueOf(port));
 
   }
 

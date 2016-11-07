@@ -6,6 +6,6 @@ package org.pitest.mutationtest.sam.web;
 public interface ISerwer {
     void Start(Integer port);
     void Stop();
-
+    void ConnectClient(String adress, Integer port);
 
 }

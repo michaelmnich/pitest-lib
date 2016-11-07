@@ -16,7 +16,8 @@ import java.util.List;
 public class WebSocketSerwer implements  ISerwer, SocketListener  {
     private  ServerSocket _serverSocket;
     private boolean _isrunning;
-    private MySocket _immputSocket;
+    private MySerwerSocket _immputSocket;
+    private MyClient _clientSocket;
     public WebSocketSerwer(){
         _isrunning = false;
         _immputSocket =null;
@@ -32,10 +33,9 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
             while(true){
                 Socket tempImmputSocket = _serverSocket.accept();
                 if(_immputSocket == null){
-                    _immputSocket = new MySocket(tempImmputSocket);
+                    _immputSocket = new MySerwerSocket(tempImmputSocket);
                     _immputSocket.addListener(this);
                     _immputSocket.start();
-
                 }
             }
 
@@ -58,20 +58,36 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     }
 
     @Override
+    public void ConnectClient(String adress, Integer port) {
+        _clientSocket = new MyClient();
+        _clientSocket.start();
+    }
+
+    @Override
     public void InfoReceived(SocketEvent event) {
         System.out.println("Przyloz Event ");
-        if(event.mood().equals("dupa testowa")){
-            _immputSocket.removeListener(this);
+        if(event.info().equals("dupa testowa")){
+           // _immputSocket.removeListener(this); //to niech robi dziecko
             _immputSocket=null;
         }
     }
+    private class MyClient extends  Thread
+    {
+        SocketClient socketClient;
 
+        public void run()
+        {
+            socketClient = new SocketClient();
+            socketClient.Connsect();
+        }
 
-    private class MySocket extends  Thread
+    }
+
+    private class MySerwerSocket extends  Thread
     {
         private Socket socket;
         private List _listeners = new ArrayList();
-        public MySocket(Socket socket)
+        public MySerwerSocket(Socket socket)
         {
             this.socket = socket;
         }
@@ -89,21 +105,25 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
                 while (true) {
                     String input = in.readLine();
                     if (input == null || input.equals("quit")) {
-                        break;
+                        System.out.println("SMA: INFO: Client send comand: "+input);
+                        break; //wyskakuje z while i konczy nasluchiwanie komend
                     }
                     out.println(input.toUpperCase());
                 }
             } catch (IOException e) {
-                System.out.println("Error handling client "+e);
+                System.out.println("SMA: ERROR: Error handling client "+e);
             } finally {
                 try {
                     socket.close();
 
                 } catch (IOException e) {
-                    System.out.println("Couldn't close a socket, what's going on?");
+                    System.out.println("SMA: ERROR: Couldn't close a socket, what's going on?");
                 }
                 _fireEvent();
-                System.out.println("Connection with client  closed");
+                _listeners.clear();//ten soket jest zamykany i bedzie usuniety w serwerze moze sastapic go kolejny
+                //Wobec tego nalezy odlaczyc dla pewności klase matke od listy listnerów i wszytko inne tez bo obiekt do usunieca
+                //jest to martwy soket
+                System.out.println("SMA: INFO: Connection with client closed Socket Closed");
 
             }
         }
