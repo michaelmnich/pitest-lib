@@ -27,26 +27,66 @@ import org.pitest.mutationtest.tooling.CombinedStatistics;
 import org.pitest.mutationtest.tooling.EntryPoint;
 import org.pitest.util.Unchecked;
 
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
-
 /**
  * Created by Michał Mnich on 25.10.2016.
  */
 public class MainWorker {
 
   public static void main(final String[] args) {
-
+  try{
     WebSocketSerwer workerSerwer = new WebSocketSerwer();
-    String client = JOptionPane.showInputDialog("Coonet to other serwer" );
-    if(client.equals("yes")){
-      System.out.println("Coonecting to serwer");
-      workerSerwer.ConnectClient("dupa",12);
+    BufferedReader cnsl = new BufferedReader(new InputStreamReader(System.in));
+
+    System.out.println("================================================================");
+    System.out.println("SAM-SYSTEM v 1.0");
+    System.out.println("================================================================");
+    if(false)//Tutaj czytamy sobie z configa porty i inne takie
+    {
+
+    }
+    else//Tutaj waliy z konsoli jak niema pliku
+    {
+
+      System.out.println("Whant to establish connection with other serwer? [Yes/.]");
+      String client =  cnsl.readLine();
+      if(client.equals("yes")) {
+        System.out.println("================================================================");
+        System.out.println("CLIENT CONNECTION CONFIG");
+        System.out.println("================================================================");
+        System.out.println("1. Insert ip. ");
+        String ip = cnsl.readLine();
+        System.out.println("1. Insert port ");
+        String port = cnsl.readLine();
+
+        workerSerwer.ConnectClient(ip, Integer.valueOf(port));
+      }
+
+      System.out.println("================================================================");
+      System.out.println("SERWER CONFIG");
+      System.out.println("================================================================");
+      System.out.println("1. insert port");
+      String port = cnsl.readLine();
+      workerSerwer.Start(Integer.valueOf(port));
+      System.out.println("================================================================");
+      System.out.println("End Serwer Config");
+      System.out.println("================================================================");
+
+
+
+
+
+
     }
 
-    String port = JOptionPane.showInputDialog("Enter Port" );
-    workerSerwer.Start(Integer.valueOf(port));
+
+  }
+  catch (Exception e){
+    e.printStackTrace();
+  }
 
   }
 

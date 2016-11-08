@@ -29,7 +29,7 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
         try {
             _serverSocket = new ServerSocket(port);
             _isrunning =true;
-
+            System.out.println("Serwer wating for reqest on port:" +port);
             while(true){
                 Socket tempImmputSocket = _serverSocket.accept();
                 if(_immputSocket == null){
@@ -77,6 +77,7 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
 
         public void run()
         {
+            System.out.println("dupa debug");
             socketClient = new SocketClient();
             socketClient.Connsect();
         }
