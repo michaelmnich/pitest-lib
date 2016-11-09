@@ -40,7 +40,7 @@ public class MainWorker {
   try{
     WebSocketSerwer workerSerwer = new WebSocketSerwer();
     BufferedReader cnsl = new BufferedReader(new InputStreamReader(System.in));
-
+    String ip="";
     System.out.println("================================================================");
     System.out.println("SAM-SYSTEM v 1.0");
     System.out.println("================================================================");
@@ -58,11 +58,11 @@ public class MainWorker {
         System.out.println("CLIENT CONNECTION CONFIG");
         System.out.println("================================================================");
         System.out.println("1. Insert ip. ");
-        String ip = cnsl.readLine();
+         ip = cnsl.readLine();
         System.out.println("1. Insert port ");
         String port = cnsl.readLine();
 
-        workerSerwer.ConnectClient(ip, Integer.valueOf(port));
+
       }
 
       System.out.println("================================================================");
@@ -70,14 +70,13 @@ public class MainWorker {
       System.out.println("================================================================");
       System.out.println("1. insert port");
       String port = cnsl.readLine();
-      workerSerwer.Start(Integer.valueOf(port));
       System.out.println("================================================================");
       System.out.println("End Serwer Config");
       System.out.println("================================================================");
 
 
-
-
+      if(!ip.equals(""))workerSerwer.ConnectClient(ip, Integer.valueOf(port));
+      workerSerwer.Start(Integer.valueOf(port));
 
 
     }

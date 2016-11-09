@@ -59,7 +59,7 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
 
     @Override
     public void ConnectClient(String adress, Integer port) {
-        _clientSocket = new MyClient();
+        _clientSocket = new MyClient(adress,port);
         _clientSocket.start();
     }
 
@@ -74,12 +74,18 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     private class MyClient extends  Thread
     {
         SocketClient socketClient;
+        String ip;
+        Integer port;
 
+        public MyClient(String adress, Integer port){
+            this.ip =adress;
+            this.port =port;
+        }
         public void run()
         {
             System.out.println("dupa debug");
             socketClient = new SocketClient();
-            socketClient.Connsect();
+            socketClient.Connsect(this.ip,this.port);
         }
 
     }

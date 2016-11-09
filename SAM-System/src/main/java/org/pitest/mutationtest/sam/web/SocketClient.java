@@ -1,6 +1,5 @@
 package org.pitest.mutationtest.sam.web;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class SocketClient {
     /**
      * Private coonection metod used in public Coonnectors
      */
-    private void connect(String serverAddress){
+    private void connect(String serverAddress, Integer port){
         try {
 
             Socket s = null;
@@ -27,7 +26,7 @@ public class SocketClient {
             String sentence="none";
             String modifiedSentence;
             BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-            Socket clientSocket = new Socket(serverAddress, 8081);
+            Socket clientSocket = new Socket(serverAddress, port);
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -63,21 +62,13 @@ public class SocketClient {
         }
     }
 
-    /**
-     *  Manuall connect
-     */
-    public void Connsect(){
-        String serverAddress = JOptionPane.showInputDialog(
-                "Enter IP Address of a machine that is\n" +
-                        "running the date service on port 9090:");
-        this.connect(serverAddress);
-    }
 
     /**
      * From Connfig Connect
-     * @param connectionData Connection Data
+     * @param ip
+     * @param port
      */
-    public void Connsect(String connectionData){
-
+    public void Connsect(String ip, Integer port){
+        this.connect(ip,port);
     }
 }
