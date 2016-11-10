@@ -9,8 +9,11 @@ import java.net.Socket;
 /**
  * Created by gosc on 07.11.2016.
  */
-public class SocketClient {
+public class SocketClient extends Thread {
 
+    private BufferedReader inFromServer;
+    private DataOutputStream outToServer;
+    private Socket clientSocket;
     public SocketClient(){
 
     }
@@ -24,11 +27,12 @@ public class SocketClient {
             Socket s = null;
 
             String sentence="none";
-            String modifiedSentence;
+
             BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-            Socket clientSocket = new Socket(serverAddress, port);
-            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            clientSocket = new Socket(serverAddress, port);
+            outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.start();
 
             while(true){
                 if(sentence.equals("close")){
@@ -41,13 +45,7 @@ public class SocketClient {
                 outToServer.writeBytes(sentence + '\n');
 
                 if(!sentence.equals("")){
-                    while(true){
-                            modifiedSentence = inFromServer.readLine();
-                            System.out.println("FROM SERVER: " + modifiedSentence);
-                        if(!inFromServer.ready()){
-                            break;
-                        }
-                    }
+
                 }
 
 
@@ -60,7 +58,32 @@ public class SocketClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
     }
+
+    public void run(){
+        try
+        {
+
+            String modifiedSentence;
+            while(true){
+
+                if(inFromServer.ready()){
+                    modifiedSentence = inFromServer.readLine();
+                    System.out.println("FROM SERVER: " + modifiedSentence);
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     /**
