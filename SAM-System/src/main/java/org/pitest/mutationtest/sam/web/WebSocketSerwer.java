@@ -16,8 +16,8 @@ import java.util.List;
 public class WebSocketSerwer implements  ISerwer, SocketListener  {
     private  ServerSocket _serverSocket;
     private boolean _isrunning;
-    private MySerwerSocket _immputSocket;
-    private MyClient _clientSocket;
+    private MySerwerSocket _immputSocket; //seket wejsciowy oczekuje zleceń;
+    private MyClient _outputSocket; //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
     public WebSocketSerwer(){
         _isrunning = false;
         _immputSocket =null;
@@ -59,8 +59,8 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
 
     @Override
     public void ConnectClient(String adress, Integer port) {
-        _clientSocket = new MyClient(adress,port);
-        _clientSocket.start();
+        _outputSocket = new MyClient(adress,port);
+        _outputSocket.start();
     }
 
     @Override

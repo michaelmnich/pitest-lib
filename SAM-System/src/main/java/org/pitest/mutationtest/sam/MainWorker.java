@@ -20,6 +20,8 @@ import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.config.ProjectConfig;
+import org.pitest.mutationtest.sam.ui.Iui;
+import org.pitest.mutationtest.sam.ui.console.ConsoleUi;
 import org.pitest.mutationtest.sam.web.WebSocketSerwer;
 import org.pitest.mutationtest.statistics.MutationStatistics;
 import org.pitest.mutationtest.tooling.AnalysisResult;
@@ -36,7 +38,16 @@ import java.util.List;
  */
 public class MainWorker {
 
-  public static void main(final String[] args) {
+  public static void main(final String[] args){
+
+    WebSocketSerwer workerSerwer = new WebSocketSerwer();
+    Iui ui = new ConsoleUi(workerSerwer);
+
+
+  }
+
+  private void olddupa()
+  {
   try{
     WebSocketSerwer workerSerwer = new WebSocketSerwer();
     BufferedReader cnsl = new BufferedReader(new InputStreamReader(System.in));
@@ -80,6 +91,12 @@ public class MainWorker {
 
 
     }
+
+
+
+
+
+
 
 
   }
