@@ -1,6 +1,7 @@
 package org.pitest.mutationtest.sam.web;
 
 import org.pitest.mutationtest.config.ReportOptions;
+import org.pitest.mutationtest.sam.config.IProjectMetaData;
 
 import java.io.Serializable;
 
@@ -15,6 +16,8 @@ public interface IWebCommunicationProtocolData extends Serializable {
     ReportOptions GetRepportOpitions();
     void SetReportOptions(ReportOptions data);
 
+    IProjectMetaData GetPitRunMetaData();
+    void SetPitRunMetadata(IProjectMetaData data);
 }
 
 

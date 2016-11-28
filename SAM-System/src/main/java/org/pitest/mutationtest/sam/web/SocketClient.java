@@ -1,5 +1,7 @@
 package org.pitest.mutationtest.sam.web;
 
+import org.pitest.mutationtest.sam.config.IProjectMetaData;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -38,7 +40,7 @@ public class SocketClient extends Thread {
     }
 
 
-    public void SendMessageToConnectedNOde(String sentence){
+    public void SendMessageToConnectedNOde(String sentence, IProjectMetaData metaData){
         try {
 
             if(sentence.equals("close")){
@@ -48,7 +50,8 @@ public class SocketClient extends Thread {
             System.out.println("Comand is: "+sentence);
             //Test------------------------------
             IWebCommunicationProtocolData d = new WebCommunicationProtocol();
-            d.SetInfo(sentence+ '\n');
+            d.SetInfo(sentence);
+            d.SetPitRunMetadata(metaData);
             //Test------------------------------
             outToServer.writeObject(d);
         } catch (IOException e) {

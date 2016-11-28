@@ -1,5 +1,7 @@
 package org.pitest.mutationtest.sam.ui.console;
 
+import org.pitest.mutationtest.sam.config.FromFileMetaData;
+import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.ui.Iui;
 import org.pitest.mutationtest.sam.web.WebSocketSerwer;
 
@@ -49,17 +51,22 @@ public class ConsoleUi implements Iui{
                             String adress = _cnsl.readLine();
                             System.out.println("Serwer Port: ");
                             int port = Integer.parseInt(_cnsl.readLine());
-                            _workerSerwer.ConnectClient(adress,port);
+                            this.connectTo(adress,port);
                             break;
                         case "start":
                             System.out.println("Serwer working port Port: ");
                             int port1 = Integer.parseInt(_cnsl.readLine());
-                            _workerSerwer.Start(Integer.valueOf(port1));
+                            this.startSerwer(Integer.valueOf(port1));
+                            break;
+                        case "run mutation":
+                            IProjectMetaData tempData =new FromFileMetaData();//i to trzeba jakos ogarnac tutaj zabawa analityczna
+                            //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
+                            _workerSerwer.SendToAllConnectedNodes("PitRun", tempData);
                             break;
                         case "Send":
                             System.out.println("Message: ");
                             String msg = _cnsl.readLine();
-                            _workerSerwer.SendToAllConnectedNodes(msg);
+                            _workerSerwer.SendToAllConnectedNodes(msg, null);
                             break;
 
                     }
@@ -85,11 +92,16 @@ public class ConsoleUi implements Iui{
 
     @Override
     public void startSerwer(int port) {
-
+        _workerSerwer.Start(port);
     }
 
     @Override
     public void connectTo(String adress, int port) {
+        _workerSerwer.ConnectClient(adress,port);
+    }
+
+    @Override
+    public void runnPit(IProjectMetaData data) {
 
     }
 }

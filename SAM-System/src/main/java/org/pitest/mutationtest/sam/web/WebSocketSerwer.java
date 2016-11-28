@@ -1,6 +1,12 @@
 package org.pitest.mutationtest.sam.web;
 
-import java.io.*;
+import org.pitest.mutationtest.sam.PitRunner;
+import org.pitest.mutationtest.sam.config.IProjectMetaData;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,11 +21,12 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     private boolean _isrunning;
     private MySerwerSocket _immputSocket; //seket wejsciowy oczekuje zleceń;
     private ArrayList<MyClient> _outputSocket = new ArrayList<MyClient>(); //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
-
+    private PitRunner _pitRunner;
 
     public WebSocketSerwer(){
         _isrunning = false;
         _immputSocket =null;
+        _pitRunner = new PitRunner();
     }
 
     @Override
@@ -75,11 +82,12 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
         }
     }
 
-    public void SendToAllConnectedNodes(String msg){
+    public void SendToAllConnectedNodes(String msg, IProjectMetaData metaData){
         for (MyClient node: _outputSocket) {
-            node.SendMessageToNode(msg);
+            node.SendMessageToNode(msg,metaData);
         }
     }
+
 
     //KLASA KLIENTA---------------------------------------------------------------------------------------------
     private class MyClient extends  Thread
@@ -105,8 +113,8 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
             }
         }
 
-        public void SendMessageToNode(String msg){
-            socketClient.SendMessageToConnectedNOde(msg);
+        public void SendMessageToNode(String msg, IProjectMetaData metaData){
+            socketClient.SendMessageToConnectedNOde(msg, metaData);
         }
 
     }
@@ -139,16 +147,26 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
                     WebCommunicationProtocol to = (WebCommunicationProtocol) ois.readObject();
                     //String input = in.readLine();
                     String input = to.GetInfo();
-                    //Tutaj analiza komend przychadzacych od noda nadrzednego------------------------------------------
+
                     if (input == null || input.equals("quit")) {
                         System.out.println("SMA: INFO: Master node send comand: "+input);
                         break; //wyskakuje z while i konczy nasluchiwanie komend
-                    }else if(input.equals("PitRunn")){
-                       //Tutaj na przyklad odpalimy pita dla danego data
                     }
+
+                    //Tutaj analiza komend przychadzacych od noda nadrzednego------------------------------------------
+                    if(input.equals("PitRun")){
+                       //Tutaj na przyklad odpalimy pita dla danego data
+                        System.out.println("SAM: INFO: Master node send comand: "+input);
+                        System.out.println("Start Mutation coverage-----------------------");
+                        out.println("INFO: NOde Starting mutation coverage");
+                        _pitRunner.RunnMutation(to.GetPitRunMetaData());
+                    }else{
+                        out.println(input.toUpperCase());
+                    }
+
                     //Tutaj analiza komend przychadzacych od noda nadrzednego------------------------------------------
 
-                    out.println(input.toUpperCase());
+
                 }
             } catch (Exception e) {
                 System.out.println("SAM: ERROR: Error handling Master node "+e);
