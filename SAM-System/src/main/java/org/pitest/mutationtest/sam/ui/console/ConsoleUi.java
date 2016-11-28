@@ -41,8 +41,25 @@ public class ConsoleUi implements Iui{
                 while (_isOn){
                         String comand = _cnsl.readLine();
                     switch (comand) {
-                        case "Monday":
-                           // tutaj bedzie magia
+                        case "test":
+                           System.out.println("Test wykonany");
+                            break;
+                        case "connect":
+                            System.out.println("Serwer adress: ");
+                            String adress = _cnsl.readLine();
+                            System.out.println("Serwer Port: ");
+                            int port = Integer.parseInt(_cnsl.readLine());
+                            _workerSerwer.ConnectClient(adress,port);
+                            break;
+                        case "start":
+                            System.out.println("Serwer working port Port: ");
+                            int port1 = Integer.parseInt(_cnsl.readLine());
+                            _workerSerwer.Start(Integer.valueOf(port1));
+                            break;
+                        case "Send":
+                            System.out.println("Message: ");
+                            String msg = _cnsl.readLine();
+                            _workerSerwer.SendToAllConnectedNodes(msg);
                             break;
 
                     }

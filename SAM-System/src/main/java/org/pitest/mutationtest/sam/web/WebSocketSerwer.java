@@ -1,9 +1,6 @@
 package org.pitest.mutationtest.sam.web;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,7 +14,9 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     private  ServerSocket _serverSocket;
     private boolean _isrunning;
     private MySerwerSocket _immputSocket; //seket wejsciowy oczekuje zleceń;
-    private MyClient _outputSocket; //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
+    private ArrayList<MyClient> _outputSocket = new ArrayList<MyClient>(); //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
+
+
     public WebSocketSerwer(){
         _isrunning = false;
         _immputSocket =null;
@@ -59,8 +58,12 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
 
     @Override
     public void ConnectClient(String adress, Integer port) {
-        _outputSocket = new MyClient(adress,port);
-        _outputSocket.start();
+
+            MyClient temp = new MyClient(adress,port);
+            _outputSocket.add(temp);
+            temp.start();
+
+
     }
 
     @Override
@@ -71,6 +74,14 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
             _immputSocket=null;
         }
     }
+
+    public void SendToAllConnectedNodes(String msg){
+        for (MyClient node: _outputSocket) {
+            node.SendMessageToNode(msg);
+        }
+    }
+
+    //KLASA KLIENTA---------------------------------------------------------------------------------------------
     private class MyClient extends  Thread
     {
         SocketClient socketClient;
@@ -83,13 +94,23 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
         }
         public void run()
         {
-            System.out.println("dupa debug");
+            try {
+            //System.out.println("dupa debug");
             socketClient = new SocketClient();
             socketClient.Connsect(this.ip,this.port);
+            }catch (Exception e){
+                System.out.println("Connection error Try again");
+               // e.printStackTrace();
+
+            }
+        }
+
+        public void SendMessageToNode(String msg){
+            socketClient.SendMessageToConnectedNOde(msg);
         }
 
     }
-
+    //KLASA KLIENTA---------------------------------------------------------------------------------------------
     private class MySerwerSocket extends  Thread
     {
         private Socket socket;
@@ -104,21 +125,33 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
         {
             try
             {
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+               // BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+
+
+                InputStream is = socket.getInputStream();
+                ObjectInputStream ois = new ObjectInputStream(is);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-                out.println("You are connected to SAM-SYSTEM ");
+                out.println("You are connected to SAM-SYSTEM Node"); //Tutaj moze odpowiedzec numerem noda i zasobami swoimi
 
                 while (true) {
-                    String input = in.readLine();
+                    WebCommunicationProtocol to = (WebCommunicationProtocol) ois.readObject();
+                    //String input = in.readLine();
+                    String input = to.GetInfo();
+                    //Tutaj analiza komend przychadzacych od noda nadrzednego------------------------------------------
                     if (input == null || input.equals("quit")) {
-                        System.out.println("SMA: INFO: Client send comand: "+input);
+                        System.out.println("SMA: INFO: Master node send comand: "+input);
                         break; //wyskakuje z while i konczy nasluchiwanie komend
+                    }else if(input.equals("PitRunn")){
+                       //Tutaj na przyklad odpalimy pita dla danego data
                     }
+                    //Tutaj analiza komend przychadzacych od noda nadrzednego------------------------------------------
+
                     out.println(input.toUpperCase());
                 }
-            } catch (IOException e) {
-                System.out.println("SMA: ERROR: Error handling client "+e);
+            } catch (Exception e) {
+                System.out.println("SAM: ERROR: Error handling Master node "+e);
             } finally {
                 try {
                     socket.close();

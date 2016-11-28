@@ -1,9 +1,6 @@
 package org.pitest.mutationtest.sam.web;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -12,7 +9,7 @@ import java.net.Socket;
 public class SocketClient extends Thread {
 
     private BufferedReader inFromServer;
-    private DataOutputStream outToServer;
+    private ObjectOutputStream outToServer;
     private Socket clientSocket;
     public SocketClient(){
 
@@ -24,37 +21,14 @@ public class SocketClient extends Thread {
     private void connect(String serverAddress, Integer port){
         try {
 
-            Socket s = null;
-
-            String sentence="none";
-
-            BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
             clientSocket = new Socket(serverAddress, port);
-            outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            outToServer = new ObjectOutputStream (clientSocket.getOutputStream());
             inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             this.start();
 
-            while(true){
-                if(sentence.equals("close")){
-                    System.out.println("Connection will be closed");
-                    break;
-                }
-                System.out.println("-----Send COmand to serwer");
-                sentence = inFromUser.readLine();
-                System.out.println("Comand is: "+sentence);
-                outToServer.writeBytes(sentence + '\n');
-
-                if(!sentence.equals("")){
-
-                }
 
 
 
-                System.out.println("dskajdhahdao");
-            }
-
-
-            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,6 +37,25 @@ public class SocketClient extends Thread {
 
     }
 
+
+    public void SendMessageToConnectedNOde(String sentence){
+        try {
+
+            if(sentence.equals("close")){
+                System.out.println("Connection will be closed");
+            }
+            System.out.println("-----Send COmand to serwer");
+            System.out.println("Comand is: "+sentence);
+            //Test------------------------------
+            IWebCommunicationProtocolData d = new WebCommunicationProtocol();
+            d.SetInfo(sentence+ '\n');
+            //Test------------------------------
+            outToServer.writeObject(d);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     public void run(){
         try
         {
@@ -92,6 +85,12 @@ public class SocketClient extends Thread {
      * @param port
      */
     public void Connsect(String ip, Integer port){
-        this.connect(ip,port);
+        try{
+            this.connect(ip,port);
+        }catch (Exception e){
+            System.out.println("Connection error Try again");
+          //  e.printStackTrace();
+        }
+
     }
 }
