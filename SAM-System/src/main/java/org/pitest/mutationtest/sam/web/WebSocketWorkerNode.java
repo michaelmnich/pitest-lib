@@ -16,14 +16,14 @@ import java.util.List;
 /**
  * Created by Michał Mnich on 30.10.2016.
  */
-public class WebSocketSerwer implements  ISerwer, SocketListener  {
+public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     private  ServerSocket _serverSocket;
     private boolean _isrunning;
-    private MySerwerSocket _immputSocket; //seket wejsciowy oczekuje zleceń;
-    private ArrayList<MyClient> _outputSocket = new ArrayList<MyClient>(); //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
+    private MyWorker _immputSocket; //seket wejsciowy oczekuje zleceń;
+    private ArrayList<MySlaveWorkerNode> _outputSocket = new ArrayList<MySlaveWorkerNode>(); //sokety wyjsciowe nimi laczymy sie z innymi sam systemami i wysylamy im zlecenia
     private PitRunner _pitRunner;
 
-    public WebSocketSerwer(){
+    public WebSocketWorkerNode(){
         _isrunning = false;
         _immputSocket =null;
         _pitRunner = new PitRunner();
@@ -39,7 +39,7 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
             while(true){
                 Socket tempImmputSocket = _serverSocket.accept();
                 if(_immputSocket == null){
-                    _immputSocket = new MySerwerSocket(tempImmputSocket);
+                    _immputSocket = new MyWorker(tempImmputSocket);
                     _immputSocket.addListener(this);
                     _immputSocket.start();
                 }
@@ -64,9 +64,9 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     }
 
     @Override
-    public void ConnectClient(String adress, Integer port) {
+    public void ConnectSlaveNode(String adress, Integer port) {
 
-            MyClient temp = new MyClient(adress,port);
+            MySlaveWorkerNode temp = new MySlaveWorkerNode(adress,port);
             _outputSocket.add(temp);
             temp.start();
 
@@ -83,20 +83,20 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
     }
 
     public void SendToAllConnectedNodes(String msg, IProjectMetaData metaData){
-        for (MyClient node: _outputSocket) {
+        for (MySlaveWorkerNode node: _outputSocket) {
             node.SendMessageToNode(msg,metaData);
         }
     }
 
 
-    //KLASA KLIENTA---------------------------------------------------------------------------------------------
-    private class MyClient extends  Thread
+    //KLASA Socketa Pod workera-----------------------------------------------------------------------------------------
+    private class MySlaveWorkerNode extends  Thread
     {
         SocketClient socketClient;
         String ip;
         Integer port;
 
-        public MyClient(String adress, Integer port){
+        public MySlaveWorkerNode(String adress, Integer port){
             this.ip =adress;
             this.port =port;
         }
@@ -118,12 +118,15 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
         }
 
     }
-    //KLASA KLIENTA---------------------------------------------------------------------------------------------
-    private class MySerwerSocket extends  Thread
+    //KLASA Socketa Pod workera-----------------------------------------------------------------------------------------
+
+    //KLASA Workera lokalnego jesli utowrozny może przyjmować zadania---------------------------------------------------
+    private class MyWorker extends  Thread
     {
         private Socket socket;
         private List _listeners = new ArrayList();
-        public MySerwerSocket(Socket socket)
+        public double Bandwich;//Numeryczna wartość obciązenia jaka może być wykożystana
+        public MyWorker(Socket socket)
         {
             this.socket = socket;
         }
@@ -200,5 +203,6 @@ public class WebSocketSerwer implements  ISerwer, SocketListener  {
             }
         }
     }
+    //KLASA Workera lokalnego jesli utowrozny może przyjmować zadania---------------------------------------------------
 
 }

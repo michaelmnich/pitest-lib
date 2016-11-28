@@ -3,7 +3,7 @@ package org.pitest.mutationtest.sam.ui.console;
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.ui.Iui;
-import org.pitest.mutationtest.sam.web.WebSocketSerwer;
+import org.pitest.mutationtest.sam.web.WebSocketWorkerNode;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
  */
 public class ConsoleUi implements Iui{
 
-    private WebSocketSerwer _workerSerwer;
+    private WebSocketWorkerNode _workerSerwer;
     private  boolean  _isOn;
     private static Object _lock;
     private BufferedReader _cnsl;
@@ -27,7 +27,7 @@ public class ConsoleUi implements Iui{
     //Comands Strings-------------------------------
 
 
-    public ConsoleUi(WebSocketSerwer workerSerwer) {
+    public ConsoleUi(WebSocketWorkerNode workerSerwer) {
         _workerSerwer = workerSerwer;
         _isOn = true;
         _lock = new Object();
@@ -97,7 +97,7 @@ public class ConsoleUi implements Iui{
 
     @Override
     public void connectTo(String adress, int port) {
-        _workerSerwer.ConnectClient(adress,port);
+        _workerSerwer.ConnectSlaveNode(adress,port);
     }
 
     @Override
