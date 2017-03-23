@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by Michał Mnich on 30.10.2016.
+ *
+ * Klasa odpowiadajaca za bycie workerem główna klasa noda
  */
 public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     private  ServerSocket _serverSocket;
@@ -30,6 +32,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     }
 
     @Override
+    //Metoda startowania serwera przyjmujacego reqesty do mutacji
     public void Start(Integer port)
     {
         try {
@@ -37,10 +40,10 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
             _isrunning =true;
             System.out.println("Serwer wating for reqest on port:" +port);
             while(true){
-                Socket tempImmputSocket = _serverSocket.accept();
+                Socket tempImmputSocket = _serverSocket.accept();//Przychodzi nowe polaczenie
                 if(_immputSocket == null){
-                    _immputSocket = new MyWorker(tempImmputSocket);
-                    _immputSocket.addListener(this);
+                    _immputSocket = new MyWorker(tempImmputSocket);//tworze nowy worker mutacji dla przychodzcego polaczenia
+                    _immputSocket.addListener(this);//przesylam temu workerowi samego siebie i teraz mozemy nasluchiwac eventu od tej klasy
                     _immputSocket.start();
                 }
             }
@@ -53,6 +56,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
 
 
     @Override
+    //Metoda Stopowania serwera przyjmujacego reqesty do mutacji
     public void Stop()
     {
         try {
@@ -64,7 +68,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     }
 
     @Override
-    public void ConnectSlaveNode(String adress, Integer port) {
+    public void ConnectSlaveNode(String adress, Integer port) { // to jest z SocketListener to jest event jak wraca cos od innych nodow do ktorych sie polaczylem
 
             MySlaveWorkerNode temp = new MySlaveWorkerNode(adress,port);
             _outputSocket.add(temp);
@@ -92,7 +96,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     //KLASA Socketa Pod workera-----------------------------------------------------------------------------------------
     private class MySlaveWorkerNode extends  Thread
     {
-        SocketClient socketClient;
+        SocketClient socketDataSender;
         String ip;
         Integer port;
 
@@ -104,8 +108,8 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
         {
             try {
             //System.out.println("dupa debug");
-            socketClient = new SocketClient();
-            socketClient.Connsect(this.ip,this.port);
+            socketDataSender = new SocketClient();
+            socketDataSender.Connsect(this.ip,this.port);
             }catch (Exception e){
                 System.out.println("Connection error Try again");
                // e.printStackTrace();
@@ -114,7 +118,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
         }
 
         public void SendMessageToNode(String msg, IProjectMetaData metaData){
-            socketClient.SendMessageToConnectedNOde(msg, metaData);
+            socketDataSender.SendMessageToConnectedNOde(msg, metaData);
         }
 
     }
@@ -189,13 +193,13 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
             }
         }
         public synchronized void addListener( SocketListener l ) {
-            _listeners.add( l );
+            _listeners.add( l ); //tu dodajemy sobie obiekty, ktore beda sluchac naszego eventu
         }
 
         public synchronized void removeListener( SocketListener l ) {
             _listeners.remove( l );
         }
-        private synchronized void _fireEvent() {
+        private synchronized void _fireEvent() { // strzelamy eventem
             SocketEvent mood = new SocketEvent( this, "dupa testowa" );
             Iterator listeners = _listeners.iterator();
             while( listeners.hasNext() ) {

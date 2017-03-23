@@ -47,14 +47,14 @@ public class ConsoleUi implements Iui{
                            System.out.println("Test wykonany");
                             break;
                         case "connect":
-                            System.out.println("Serwer adress: ");
+                            System.out.println("Server adress: ");
                             String adress = _cnsl.readLine();
-                            System.out.println("Serwer Port: ");
+                            System.out.println("Server Port: ");
                             int port = Integer.parseInt(_cnsl.readLine());
                             this.connectTo(adress,port);
                             break;
                         case "start":
-                            System.out.println("Serwer working port Port: ");
+                            System.out.println("Set server working port Port: ");
                             int port1 = Integer.parseInt(_cnsl.readLine());
                             this.startSerwer(Integer.valueOf(port1));
                             break;
@@ -67,6 +67,26 @@ public class ConsoleUi implements Iui{
                             System.out.println("Message: ");
                             String msg = _cnsl.readLine();
                             _workerSerwer.SendToAllConnectedNodes(msg, null);
+                            break;
+                        case "help":
+                            System.out.println("Message: ");
+                            System.out.println("ENG:");
+
+                            System.out.println("Commands:");
+                            System.out.println("1. test Internal test not important.");
+                            System.out.println("2. connect System will ask you for ip address and port. After setting correct data system will connect to SAM Serwer. (After connection you can send star mutation request for all SAM  Servers).");
+                            System.out.println("3. start Run SAM System server on this machine. You will be ask for port.");
+                            System.out.println("4. run mutation This command send start mutation request to all connected SAM severs.");
+
+
+                            System.out.println("PL:");
+
+                            System.out.println("Komendy:");
+                            System.out.println("1. test Wewnętrzny test sytemu nie istotne.");
+                            System.out.println("2. connect System zapyta cię o adres ip. i Port a następnie po podaniu prawidłowych danych połączy cie z nimi. (po połączeniu będziesz mógł wysłać żądanie rozpoczęcia testów mutacyjnych)");
+                            System.out.println("3. start Uruchamia serwer mutacyjny na. Należy podać port na jakim serwer będzie działał");
+                            System.out.println("4. run mutation Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji.");
+
                             break;
 
                     }
