@@ -23,7 +23,9 @@ public class ConsoleUi implements Iui{
     String CCS_stoped = "SAM-System Console stoped";
     String CCS_start ="================================================================"+System.lineSeparator()+
                       "SAM-SYSTEM v 1.0"+System.lineSeparator()+
-                      "================================================================";
+                      "================================================================"+System.lineSeparator()+
+                      "Need help? type 'help'"
+            ;
     //Comands Strings-------------------------------
 
 
@@ -73,19 +75,19 @@ public class ConsoleUi implements Iui{
                             System.out.println("ENG:");
 
                             System.out.println("Commands:");
-                            System.out.println("1. test Internal test not important.");
-                            System.out.println("2. connect System will ask you for ip address and port. After setting correct data system will connect to SAM Serwer. (After connection you can send star mutation request for all SAM  Servers).");
-                            System.out.println("3. start Run SAM System server on this machine. You will be ask for port.");
-                            System.out.println("4. run mutation This command send start mutation request to all connected SAM severs.");
+                            System.out.println("1. 'test' Internal test not important.");
+                            System.out.println("2. 'connect' System will ask you for ip address and port. After setting correct data system will connect to SAM Serwer. (After connection you can send star mutation request for all SAM  Servers).");
+                            System.out.println("3. 'start' Run SAM System server on this machine. You will be ask for port.");
+                            System.out.println("4. 'run mutation' This command send start mutation request to all connected SAM severs.");
 
 
                             System.out.println("PL:");
 
                             System.out.println("Komendy:");
-                            System.out.println("1. test Wewnętrzny test sytemu nie istotne.");
-                            System.out.println("2. connect System zapyta cię o adres ip. i Port a następnie po podaniu prawidłowych danych połączy cie z nimi. (po połączeniu będziesz mógł wysłać żądanie rozpoczęcia testów mutacyjnych)");
-                            System.out.println("3. start Uruchamia serwer mutacyjny na. Należy podać port na jakim serwer będzie działał");
-                            System.out.println("4. run mutation Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji.");
+                            System.out.println("1. 'test' Wewnętrzny test sytemu nie istotne.");
+                            System.out.println("2. 'connect' System zapyta cię o adres ip. i Port a następnie po podaniu prawidłowych danych połączy cie z nimi. (po połączeniu będziesz mógł wysłać żądanie rozpoczęcia testów mutacyjnych)");
+                            System.out.println("3. 'start' Uruchamia serwer mutacyjny na. Należy podać port na jakim serwer będzie działał");
+                            System.out.println("4. 'run mutation' Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji.");
 
                             break;
 

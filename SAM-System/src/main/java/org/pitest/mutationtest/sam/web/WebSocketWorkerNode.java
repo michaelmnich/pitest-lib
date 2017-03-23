@@ -38,7 +38,7 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
         try {
             _serverSocket = new ServerSocket(port);
             _isrunning =true;
-            System.out.println("Serwer wating for reqest on port:" +port);
+            System.out.println("Serwer waiting for request on port:" +port);
             while(true){
                 Socket tempImmputSocket = _serverSocket.accept();//Przychodzi nowe polaczenie
                 if(_immputSocket == null){
