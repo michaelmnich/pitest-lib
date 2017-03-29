@@ -14,6 +14,10 @@ public class FromFileMetaData implements IProjectMetaData {
             this(System.getProperty("user.dir"), "metadata.ini");
     }
 
+    public FromFileMetaData(String path) {
+        this(System.getProperty("user.dir"), "metadata.ini");
+    }
+
     public FromFileMetaData(String dir, String configFile)  {
         try {
             File f =new File(dir,configFile);
@@ -42,5 +46,10 @@ public class FromFileMetaData implements IProjectMetaData {
     @Override
     public String[] GetMetaData() {
         return  arguments.toArray(new String[arguments.size()]);
+    }
+
+    @Override
+    public List<String> GetMetaDataList() {
+        return arguments;
     }
 }

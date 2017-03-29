@@ -4,7 +4,7 @@ import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 
 /**
- * Created by gosc on 10.11.2016.
+ * Created by Michał Mnich on 10.11.2016.
  */
 public class WebCommunicationProtocol implements IWebCommunicationProtocolData {
 

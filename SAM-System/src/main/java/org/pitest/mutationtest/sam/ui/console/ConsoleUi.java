@@ -2,6 +2,8 @@ package org.pitest.mutationtest.sam.ui.console;
 
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
+import org.pitest.mutationtest.sam.config.ImputMetaData;
+import org.pitest.mutationtest.sam.config.SimpleMetaData;
 import org.pitest.mutationtest.sam.ui.Iui;
 import org.pitest.mutationtest.sam.web.WebSocketWorkerNode;
 
@@ -64,6 +66,17 @@ public class ConsoleUi implements Iui{
                             IProjectMetaData tempData =new FromFileMetaData();//i to trzeba jakos ogarnac tutaj zabawa analityczna
                             //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
                             _workerSerwer.SendToAllConnectedNodes("PitRun", tempData);
+                            break;
+                        case "run mutation -i":
+                            //ImputMetaData(String ClassesClassPatch, String TestClassPath, String DumpDir, String ClassesStringList){
+                            IProjectMetaData tempDataFromIn =new ImputMetaData(
+                                    "D:\\\\Doktorat\\\\PitPlayground\\\\IOgr602-master\\\\target\\\\test-classes\\\\,D:\\\\Doktorat\\\\PitPlayground\\\\IOgr602-master\\\\target\\\\classes\\\\",
+                                    "D:\\\\Doktorat\\\\PitPlayground\\\\IOgr602-master\\\\",
+                                    "D:\\\\trash\\\\",
+                                    "matrixlibrary.IMatrixMathImpl, matrixlibrary.IMatrixImpl"
+                            );
+                            IProjectMetaData tempDataFromIn2 = new SimpleMetaData(tempDataFromIn.GetMetaDataList());
+                            _workerSerwer.SendToAllConnectedNodes("PitRun", tempDataFromIn2);
                             break;
                         case "Send":
                             System.out.println("Message: ");
