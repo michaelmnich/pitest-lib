@@ -40,6 +40,7 @@ public class PitRunner {
         String args2[] = pmd.GetMetaData();
         ProjectConfig pc= new ProjectConfig();
         List<String> cp = pc.cp;
+        cp.addAll(pmd.GetClaspathAsAList());
         //KONFIGURACJE-------------------------------------------------------------
 
         final ParseResult pr = parser.parse(args2);

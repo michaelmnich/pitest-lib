@@ -65,4 +65,14 @@ public class ImputMetaData implements IProjectMetaData {
         }
         return toretL;
     }
+    @Override
+    public List<String> GetClaspathAsAList(){
+        List<String> toretL = new ArrayList<>();
+        if(!_imputObject.get_projectClassesPatch().equals("")){
+
+            toretL.add(_imputObject.get_projectClassesPatch().split(",")[0]);
+            toretL.add(_imputObject.get_projectClassesPatch().split(",")[1]);
+        }
+        return toretL;
+    }
 }

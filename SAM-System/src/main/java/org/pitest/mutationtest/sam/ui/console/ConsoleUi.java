@@ -3,7 +3,7 @@ package org.pitest.mutationtest.sam.ui.console;
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.config.ImputMetaData;
-import org.pitest.mutationtest.sam.config.SimpleMetaData;
+import org.pitest.mutationtest.sam.config.SimpleMetaDataToPropagate;
 import org.pitest.mutationtest.sam.ui.Iui;
 import org.pitest.mutationtest.sam.web.WebSocketWorkerNode;
 
@@ -62,12 +62,17 @@ public class ConsoleUi implements Iui{
                             int port1 = Integer.parseInt(_cnsl.readLine());
                             this.startSerwer(Integer.valueOf(port1));
                             break;
-                        case "run mutation":
+                        case "run mutation -broudcast":
                             IProjectMetaData tempData =new FromFileMetaData();//i to trzeba jakos ogarnac tutaj zabawa analityczna
                             //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
                             _workerSerwer.SendToAllConnectedNodes("PitRun", tempData);
                             break;
-                        case "run mutation -i":
+                        case "run mutation":
+                            IProjectMetaData tempDataLocal =new FromFileMetaData();//i to trzeba jakos ogarnac tutaj zabawa analityczna
+                            //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
+                            _workerSerwer.RunnPitStandAlone(tempDataLocal);
+                            break;
+                        case "run mutation -i": //Metoda z wstryzkiwanym imputem hardcoded narazie
                             //ImputMetaData(String ClassesClassPatch, String TestClassPath, String DumpDir, String ClassesStringList){
                             IProjectMetaData tempDataFromIn =new ImputMetaData(
                                     "D:\\\\Doktorat\\\\PitPlayground\\\\IOgr602-master\\\\target\\\\test-classes\\\\,D:\\\\Doktorat\\\\PitPlayground\\\\IOgr602-master\\\\target\\\\classes\\\\",
@@ -75,7 +80,7 @@ public class ConsoleUi implements Iui{
                                     "D:\\\\trash\\\\",
                                     "matrixlibrary.IMatrixMathImpl, matrixlibrary.IMatrixImpl"
                             );
-                            IProjectMetaData tempDataFromIn2 = new SimpleMetaData(tempDataFromIn.GetMetaDataList());
+                            IProjectMetaData tempDataFromIn2 = new SimpleMetaDataToPropagate(tempDataFromIn.GetMetaDataList(), tempDataFromIn.GetClaspathAsAList());
                             _workerSerwer.SendToAllConnectedNodes("PitRun", tempDataFromIn2);
                             break;
                         case "Send":
@@ -91,7 +96,7 @@ public class ConsoleUi implements Iui{
                             System.out.println("1. 'test' Internal test not important.");
                             System.out.println("2. 'connect' System will ask you for ip address and port. After setting correct data system will connect to SAM Serwer. (After connection you can send star mutation request for all SAM  Servers).");
                             System.out.println("3. 'start' Run SAM System server on this machine. You will be ask for port.");
-                            System.out.println("4. 'run mutation' This command send start mutation request to all connected SAM severs.");
+                            System.out.println("4. 'run mutation -broudcast' This command send start mutation request to all connected SAM severs.");
 
 
                             System.out.println("PL:");
@@ -100,7 +105,9 @@ public class ConsoleUi implements Iui{
                             System.out.println("1. 'test' Wewnętrzny test sytemu nie istotne.");
                             System.out.println("2. 'connect' System zapyta cię o adres ip. i Port a następnie po podaniu prawidłowych danych połączy cie z nimi. (po połączeniu będziesz mógł wysłać żądanie rozpoczęcia testów mutacyjnych)");
                             System.out.println("3. 'start' Uruchamia serwer mutacyjny na. Należy podać port na jakim serwer będzie działał");
-                            System.out.println("4. 'run mutation' Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji.");
+                            System.out.println("4. 'run mutation -broudcast' Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji.");
+                            System.out.println("4. 'run mutation' Ta komendy uruchamia mutacje lokalnie tylko tu");
+                            System.out.println("4. 'run mutation -i '  Ta komendy wysyła broadcastem wszystkim połączonym maszynom komunikat o prośbie rozpoczęcia mutacji. zarazem po i potrzeba podać okreslony immput przykład: ");
 
                             break;
 

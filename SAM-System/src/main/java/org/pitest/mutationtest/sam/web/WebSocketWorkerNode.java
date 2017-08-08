@@ -31,6 +31,15 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
         _pitRunner = new PitRunner();
     }
 
+    public void RunnPitStandAlone(IProjectMetaData metaData){
+        System.out.println("SAM: INFO: Stand Alone Mutation request ");
+        System.out.println("Start Mutation coverage-----------------------");
+        System.out.println("INFO: Starting mutation coverage");
+        _pitRunner.RunnMutation(metaData);
+    }
+
+
+
     @Override
     //Metoda startowania serwera przyjmujacego reqesty do mutacji
     public void Start(Integer port)
@@ -92,7 +101,8 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
         }
     }
 
-
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //Ponizej gdy tworze(łaczę sie) z robolem !!!
     //KLASA Socketa Pod workera-----------------------------------------------------------------------------------------
     private class MySlaveWorkerNode extends  Thread
     {
@@ -124,6 +134,8 @@ public class WebSocketWorkerNode implements  ISerwer, SocketListener  {
     }
     //KLASA Socketa Pod workera-----------------------------------------------------------------------------------------
 
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //Ponizej gdy ja jestem robolem !!!
     //KLASA Workera lokalnego jesli utowrozny może przyjmować zadania---------------------------------------------------
     private class MyWorker extends  Thread
     {

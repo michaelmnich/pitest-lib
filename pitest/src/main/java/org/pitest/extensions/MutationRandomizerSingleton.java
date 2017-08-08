@@ -58,8 +58,9 @@ public class MutationRandomizerSingleton {
         //tutja bedzie jakis confg reader;
         //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
         configData = new MutationConfig();
-        String dir = "d:\\config.ini";
-        File f = new File(dir); //to jakos inaczej podac trzeba
+        String dir = "MutationProbabilityConfig.ini";
+        File f = new File( System.getProperty("user.dir"), dir); //to jakos inaczej podac trzeba
+
         try {
             configData.readConfig(f);
         } catch (IOException e) {
