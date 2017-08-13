@@ -60,6 +60,8 @@ public final class Score {
     return totalDetected;
   }
 
+  public Iterable<StatusCount> GetCounts(){ return counts;}
+
   public int getPercentageDetected() {
     if (getTotalMutations() == 0) {
       return 100;

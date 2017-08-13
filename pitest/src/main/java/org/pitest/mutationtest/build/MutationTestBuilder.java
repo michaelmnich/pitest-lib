@@ -58,7 +58,7 @@ public class MutationTestBuilder {
 
     List<MutationDetails> defoultMutations = FCollection.flatMap(codeClasses, classToMutations());
 
-    //tutaj dzieje sie magia
+    //tutaj dzieje sie magia, wysylam wszytke mutanty jakei wygenerowal i teraz filtruje je zanim zostana odpalone testy i zanalizowane
     final List<MutationDetails> mutations = MutationRandomizerSingleton.getInstance().Randomize(defoultMutations);
     
     Collections.sort(mutations, comparator());

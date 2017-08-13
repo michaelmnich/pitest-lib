@@ -1,7 +1,12 @@
 package org.pitest.extensions;
 
+import org.pitest.mutationtest.DetectionStatus;
 import org.pitest.mutationtest.engine.MutationDetails;
 import org.pitest.mutationtest.report.block.BlockReportListner;
+import org.pitest.mutationtest.statistics.MutationStatistics;
+import org.pitest.mutationtest.statistics.MutationStatisticsListener;
+import org.pitest.mutationtest.statistics.Score;
+import org.pitest.mutationtest.statistics.StatusCount;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,33 +20,9 @@ public class MutationRandomizerSingleton {
     private static MutationRandomizerSingleton instance = null;
 
     private LinkedHashMap<String, ProbabilityEvaluator> mutators = new LinkedHashMap<String, ProbabilityEvaluator>();
-            MutationConfig configData;
-    private List<String> mutansNames = new ArrayList<String>(Arrays.asList(
-            "INVERT_NEGS",
-            "RETURN_VALS",
-            "INLINE_CONSTS",
-            "MATH",
-            "VOID_METHOD_CALLS",
-            "NEGATE_CONDITIONALS",
-            "CONDITIONALS_BOUNDARY",
-            "INCREMENTS",
-            "REMOVE_INCREMENTS",
-            "NON_VOID_METHOD_CALLS",
-            "CONSTRUCTOR_CALLS",
-            "REMOVE_CONDITIONALS_EQ_IF",
-            "REMOVE_CONDITIONALS_EQ_ELSE",
-            "REMOVE_CONDITIONALS_ORD_IF",
-            "REMOVE_CONDITIONALS_ORD_ELSE",
-            "REMOVE_CONDITIONALS",
-            "EXPERIMENTAL_MEMBER_VARIABLE",
-            "EXPERIMENTAL_SWITCH",
-            "EXPERIMENTAL_ARGUMENT_PROPAGATION",
-            //Jakies dziwne grupy
-            "REMOVE_SWITCH",
-            "DEFAULTS",
-            "STRONGER",
-            "ALL" //hmmm?
-    ));
+    private MutationConfig configData;
+    private List<MutatorsNames> mutansNames;
+
     private BlockReportListner blockListner;
     //-------------------------------------------------------------------------------------------------------------
 
@@ -51,8 +32,34 @@ public class MutationRandomizerSingleton {
     private MutationRandomizerSingleton() {
         // Exists only to defeat instantiation.
 
-
-
+        mutansNames = new ArrayList<MutatorsNames>(Arrays.asList(
+                new MutatorsNames ("INVERT_NEGS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("RETURN_VALS", "org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator"),
+                new MutatorsNames ("INLINE_CONSTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("MATH", "org.pitest.mutationtest.engine.gregor.mutators.MathMutator"),
+                new MutatorsNames ("VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("NEGATE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator"),
+                new MutatorsNames ("CONDITIONALS_BOUNDARY", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("NON_VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("CONSTRUCTOR_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_IF", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_IF", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("EXPERIMENTAL_MEMBER_VARIABLE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("EXPERIMENTAL_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("EXPERIMENTAL_ARGUMENT_PROPAGATION", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+//Jakies dziwne grupy
+                new MutatorsNames ("REMOVE_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("DEFAULTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("STRONGER", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("ALL" , "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator")
+                        //hmmm?
+                ));
+        //mutansNames2 = mutansNames;
         blockListner = new BlockReportListner();
 
         //tutja bedzie jakis confg reader;
@@ -83,16 +90,16 @@ public class MutationRandomizerSingleton {
         Date d =new Date(System.currentTimeMillis());
         System.out.println("EXTENDED PIT >> " + d.toString() +" >> Imput Mutation Configuration");
         System.out.println("================================================================================");
-        for (String mutantName:mutansNames) {
+        for (MutatorsNames mutantName:mutansNames) {
             int scale =0;
             int probality =0;
-            if(configData.IsMutantKeyExist(mutantName)) {
-                scale =configData.GetMutatroScale(mutantName);
-                probality =configData.GetMutatorProbabilty(mutantName);
-                mutators.put(mutantName, new ProbabilityEvaluator(scale,probality ));
+            if(configData.IsMutantKeyExist(mutantName.Id)) {
+                scale =configData.GetMutatroScale(mutantName.Id);
+                probality =configData.GetMutatorProbabilty(mutantName.Id);
+                mutators.put(mutantName.Id, new ProbabilityEvaluator(scale,probality ));
                 System.out.format("%-15s%-15s%-15s\n",mutantName,  "scale: "+ scale, "probabilty: " + probality);
             }else{
-                mutators.put( mutantName, new ProbabilityEvaluator(1,0));
+                mutators.put( mutantName.Id, new ProbabilityEvaluator(1,0));
                 System.out.format("%-15s%-15s%-15s\n",mutantName, "scale: "+ scale, "probabilty: 1 <- Mutant in config was unset.");
             }
 
@@ -163,5 +170,47 @@ public class MutationRandomizerSingleton {
             instance = new MutationRandomizerSingleton();
         }
         return instance;
+    }
+
+    public static void PushStats(MutationStatisticsListener stats) {
+
+        MutationStatistics mutStat = stats.getStatistics();
+        for (Score sorce : mutStat.getScores())
+        {
+            //TODO tutaj bajes i inn
+            // if sorce survived 0 obnizamy prawdopodobienstwo
+            List<StatusCount> counts = (List<StatusCount>) sorce.GetCounts();
+            for (StatusCount status:counts) {
+                if(status.getStatus().equals(DetectionStatus.SURVIVED)){
+                    //tutaj zbieram ilosc mutantow ktora przerzyla
+                    if(status.getCount()==0){
+                        //TODO poprawic prawdopodobienstwo
+                        MutatorsNames mm =   getMutatorsNamesObj(sorce.getMutatorName()); //pobieram nazwe operatora mutacyjnego ktremu nalezy poprawic prawdopodobienstow
+                        instance.configData.SetMutatorProbabilty(mm.Id, 0.5, 100);//poprawka konfiga mutacji
+                    }
+                }
+            }
+        }
+        //todo na koniec natpisac konfiga
+
+    }
+
+    private static MutatorsNames getMutatorsNamesObj(String key){
+        for (MutatorsNames mm  : instance.mutansNames)
+        {
+            if(mm.Id.equals(key) || mm.ClassName.equals(key)){
+                return mm;
+            }
+        }
+        return null;
+    }
+
+    public class MutatorsNames {
+        public MutatorsNames(String id, String className){
+            Id= id;
+            ClassName =className;
+        }
+        public String Id;
+        public String ClassName;
     }
 }

@@ -138,7 +138,7 @@ public class MutationCoverage {
     LOG.info("Completed in " + timeSpan(t0));
 
     printStats(stats);
-
+    MutationRandomizerSingleton.PushStats(stats);
     return new CombinedStatistics(stats.getStatistics(),
         coverageData.createSummary());
 

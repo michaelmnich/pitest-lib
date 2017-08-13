@@ -3,7 +3,7 @@ package org.pitest.extensions;
 import java.util.Random;
 
 /**
- * Created by gosc on 25.08.2016.
+ * Created by Michał Mnich on 25.08.2016.
  */
 public class ProbabilityEvaluator {
 
