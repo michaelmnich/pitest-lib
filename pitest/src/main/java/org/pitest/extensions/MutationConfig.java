@@ -72,14 +72,21 @@ public class MutationConfig {
     }
     ///Ta mettoda pobiera nam prawdopodobienstwo zgone z skala
     //poniewaz losowanie odbywa sie na zasadzie next int >< od prawdopodobienstwa to: wartosc prawdopodobeinstwa musi odpowiadac skali
-    //to tez np 0.5 dla skali 100 to bedzei 50 dla skali 1000 to 500 czyli next int dla skali 100 bedzie musial byc wiekszy niz 50 zeby uznac ze wylosowani prawde. 
+    //to tez np 0.5 dla skali 100 to bedzei 50 dla skali 1000 to 500 czyli next int dla skali 100 bedzie musial byc wiekszy niz 50 zeby uznac ze wylosowani prawde.
     public int GetMutatorProbabilty(String key){
         return (int) (mutatorConfig.get(key).Scale - (mutatorConfig.get(key).Scale* mutatorConfig.get(key).Probabilty));
     }
 
     public void SetMutatorProbabilty(String key, double Probabilty, int Scale){
-        mutatorConfig.get(key).Scale  = Scale;
-        mutatorConfig.get(key).Probabilty  = Probabilty;
+        if(IsMutantKeyExist(key)){
+            mutatorConfig.get(key).Scale  = Scale;
+            mutatorConfig.get(key).Probabilty  = Probabilty;
+        }
+       else{
+            mutatorConfig.put(key, new MutantCofig(Probabilty, Scale));
+        }
+
+
     }
 
     private class MutantCofig{

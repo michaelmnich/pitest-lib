@@ -24,6 +24,12 @@ public class MutationRandomizerSingleton {
     private List<MutatorsNames> mutansNames;
 
     private BlockReportListner blockListner;
+
+    //Bayses------
+    double _alpha=Double.NaN;
+    double _betha=Double.NaN;
+    //Bayses------
+
     //-------------------------------------------------------------------------------------------------------------
 
     /**
@@ -39,7 +45,7 @@ public class MutationRandomizerSingleton {
                 new MutatorsNames ("MATH", "org.pitest.mutationtest.engine.gregor.mutators.MathMutator"),
                 new MutatorsNames ("VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
                 new MutatorsNames ("NEGATE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator"),
-                new MutatorsNames ("CONDITIONALS_BOUNDARY", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("CONDITIONALS_BOUNDARY", "org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator"),
                 new MutatorsNames ("INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
                 new MutatorsNames ("REMOVE_INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
                 new MutatorsNames ("NON_VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
@@ -67,7 +73,8 @@ public class MutationRandomizerSingleton {
         configData = new MutationConfig();
         String dir = "MutationProbabilityConfig.ini";
         File f = new File( System.getProperty("user.dir"), dir); //to jakos inaczej podac trzeba
-
+        _alpha = 12;
+        _betha = 12;
         try {
             configData.readConfig(f);
         } catch (IOException e) {
@@ -97,10 +104,10 @@ public class MutationRandomizerSingleton {
                 scale =configData.GetMutatroScale(mutantName.Id);
                 probality =configData.GetMutatorProbabilty(mutantName.Id);
                 mutators.put(mutantName.Id, new ProbabilityEvaluator(scale,probality ));
-                System.out.format("%-15s%-15s%-15s\n",mutantName,  "scale: "+ scale, "probabilty: " + probality);
+                System.out.format("%-15s%-15s%-15s\n",mutantName.Id,  "scale: "+ scale, "probabilty: " + probality);
             }else{
                 mutators.put( mutantName.Id, new ProbabilityEvaluator(1,0));
-                System.out.format("%-15s%-15s%-15s\n",mutantName, "scale: "+ scale, "probabilty: 1 <- Mutant in config was unset.");
+                System.out.format("%-15s%-15s%-15s\n",mutantName.Id, "scale: "+ scale, "probabilty: 1 <- Mutant in config was unset.");
             }
 
         }
@@ -173,27 +180,60 @@ public class MutationRandomizerSingleton {
     }
 
     public static void PushStats(MutationStatisticsListener stats) {
+        //1. Objasnienie matematyczne Dla Kazdego i wyznaczamy alpha oraz beta  (stałe bayesa)  i to jest indeks operataro mutacyjnego
+        //Poczatkowo ustawiamy stale o wartosni np 12 kazda wartośc poczatkow ajest dobra gdy nic nie wiemy. PATRZ konstruktor
+        // obliczamy BETA ( Teta | Alpha, Beta)
+        // Obliczamy E_THETA
 
+        System.out.println("================================================================================");
+        System.out.println("Prawdopodobieństwa Popraione Bayesem Nowe wartosci: ");
+        System.out.println("================================================================================");
         MutationStatistics mutStat = stats.getStatistics();
         for (Score sorce : mutStat.getScores())
         {
-            //TODO tutaj bajes i inn
-            // if sorce survived 0 obnizamy prawdopodobienstwo
-            List<StatusCount> counts = (List<StatusCount>) sorce.GetCounts();
+
+            long M_s=0;
+            long total_M=0;
+
+            Iterable<StatusCount> counts =  sorce.GetCounts();
+            total_M = sorce.getTotalMutations();
             for (StatusCount status:counts) {
                 if(status.getStatus().equals(DetectionStatus.SURVIVED)){
-                    //tutaj zbieram ilosc mutantow ktora przerzyla
-                    if(status.getCount()==0){
-                        //TODO poprawic prawdopodobienstwo
-                        MutatorsNames mm =   getMutatorsNamesObj(sorce.getMutatorName()); //pobieram nazwe operatora mutacyjnego ktremu nalezy poprawic prawdopodobienstow
-                        instance.configData.SetMutatorProbabilty(mm.Id, 0.5, 100);//poprawka konfiga mutacji
-                    }
+                   M_s = status.getCount(); //liczba zywych mutantow
+                }
+                if(status.getStatus().equals(DetectionStatus.NO_COVERAGE)){
+                    M_s += status.getCount(); // liczba nie pokrytych mutantów ergo zywych
                 }
             }
+
+            instance.BETA_OF_Tetha(M_s,total_M);
+            M_s=0;
+            total_M=0;
+            MutatorsNames mm =   getMutatorsNamesObj(sorce.getMutatorName()); //pobieram nazwe operatora mutacyjnego ktremu nalezy poprawic prawdopodobienstow
+            double newProbablity = instance.E_THETA();
+            double OldProb =1;
+            int scale =100;
+            if(instance.configData.IsMutantKeyExist(mm.Id)) {
+            scale =instance.configData.GetMutatroScale(mm.Id) ;
+            OldProb  = instance.configData.GetMutatorProbabilty(mm.Id);
+            }
+            instance.configData.SetMutatorProbabilty(mm.Id, newProbablity,  scale);//poprawka konfiga mutacji
+            System.out.println("Operator: "+mm.Id+ " stare= "+ OldProb +" nowe= "+ newProbablity+" Skala= "+ scale);
         }
         //todo na koniec natpisac konfiga
+        System.out.println("================================================================================");
+    }
+
+    private void BETA_OF_Tetha( long M_survived, long AllMutants){
+        _alpha = _alpha + M_survived;
+        _betha = AllMutants -  M_survived + _betha;
 
     }
+
+    private double  E_THETA(){
+        return _alpha/(_alpha+_betha);
+    }
+
 
     private static MutatorsNames getMutatorsNamesObj(String key){
         for (MutatorsNames mm  : instance.mutansNames)
