@@ -1,5 +1,6 @@
 package org.pitest.mutationtest.sam.ui.console;
 
+import org.pitest.extensions.MutationRandomizerSingleton;
 import org.pitest.mutationtest.sam.config.FromFileMetaData;
 import org.pitest.mutationtest.sam.config.IProjectMetaData;
 import org.pitest.mutationtest.sam.config.ImputMetaData;
@@ -67,10 +68,16 @@ public class ConsoleUi implements Iui{
                             //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
                             _workerSerwer.SendToAllConnectedNodes("PitRun", tempData);
                             break;
-                        case "run mutation":
-                            IProjectMetaData tempDataLocal =new FromFileMetaData();//i to trzeba jakos ogarnac tutaj zabawa analityczna
-                            //Przed wszystkim klasy trzeba wyciac osobno i do testów ilosc klas przez ilosc nodó i wywylayac jakos
+                        case "run mutation": //Odpalanie pojedynczej instacji pita projekt pobierany z konfiga
+                            IProjectMetaData tempDataLocal =new FromFileMetaData();
+                           // MutationRandomizerSingleton.SetBayes = true;
                             _workerSerwer.RunnPitStandAlone(tempDataLocal);
+                            break;
+                        case "run mutation -bayes": //Odpalanie pojedynczej instacji pita projekt pobierany z konfiga z uwzglednienim bayesa
+                            IProjectMetaData tempDataLocal_bayes =new FromFileMetaData();
+                            MutationRandomizerSingleton.SetBayes = true;
+                            _workerSerwer.RunnPitStandAlone(tempDataLocal_bayes);
+
                             break;
                         case "run mutation -i": //Metoda z wstryzkiwanym imputem hardcoded narazie
                             //ImputMetaData(String ClassesClassPatch, String TestClassPath, String DumpDir, String ClassesStringList){

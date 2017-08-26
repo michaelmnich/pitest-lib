@@ -10,6 +10,8 @@ import org.pitest.mutationtest.statistics.StatusCount;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -28,6 +30,7 @@ public class MutationRandomizerSingleton {
     //Bayses------
     double _alpha=Double.NaN;
     double _betha=Double.NaN;
+    public static boolean SetBayes = false;
     //Bayses------
 
     //-------------------------------------------------------------------------------------------------------------
@@ -41,38 +44,50 @@ public class MutationRandomizerSingleton {
         mutansNames = new ArrayList<MutatorsNames>(Arrays.asList(
                 new MutatorsNames ("INVERT_NEGS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
                 new MutatorsNames ("RETURN_VALS", "org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator"),
-                new MutatorsNames ("INLINE_CONSTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("INLINE_CONSTS", "org.pitest.mutationtest.engine.gregor.mutators.InlineConstantMutator"),
                 new MutatorsNames ("MATH", "org.pitest.mutationtest.engine.gregor.mutators.MathMutator"),
-                new MutatorsNames ("VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator"),
                 new MutatorsNames ("NEGATE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator"),
                 new MutatorsNames ("CONDITIONALS_BOUNDARY", "org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator"),
-                new MutatorsNames ("INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("NON_VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("CONSTRUCTOR_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_IF", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_IF", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("REMOVE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("EXPERIMENTAL_MEMBER_VARIABLE", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("EXPERIMENTAL_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("EXPERIMENTAL_ARGUMENT_PROPAGATION", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
+                new MutatorsNames ("INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.IncrementsMutator"),
+                new MutatorsNames ("REMOVE_INCREMENTS", "org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveIncrementsMutator"),
+                new MutatorsNames ("NON_VOID_METHOD_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.NonVoidMethodCallMutator"),
+                new MutatorsNames ("CONSTRUCTOR_CALLS", "org.pitest.mutationtest.engine.gregor.mutators.ConstructorCallMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_IF", "org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_EQ_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_IF", "org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS_ORD_ELSE", "org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator"),
+                new MutatorsNames ("REMOVE_CONDITIONALS", "org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator"),
+                new MutatorsNames ("EXPERIMENTAL_MEMBER_VARIABLE", "org.pitest.mutationtest.engine.gregor.mutators.experimental.MemberVariableMutator"),
+                new MutatorsNames ("EXPERIMENTAL_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.experimental.SwitchMutator"),
+                new MutatorsNames ("EXPERIMENTAL_ARGUMENT_PROPAGATION", " "),
 //Jakies dziwne grupy
-                new MutatorsNames ("REMOVE_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("DEFAULTS", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("STRONGER", "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator"),
-                new MutatorsNames ("ALL" , "org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator")
+                new MutatorsNames ("REMOVE_SWITCH", "org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveSwitchMutator"),
+                new MutatorsNames ("DEFAULTS", " "),
+                new MutatorsNames ("STRONGER", " "),
+                new MutatorsNames ("ALL" , " ")
                         //hmmm?
                 ));
+
         //mutansNames2 = mutansNames;
         blockListner = new BlockReportListner();
 
         //tutja bedzie jakis confg reader;
         //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
         configData = new MutationConfig();
-        String dir = "MutationProbabilityConfig.ini";
-        File f = new File( System.getProperty("user.dir"), dir); //to jakos inaczej podac trzeba
+        String dir = "";
+        File f;
+        Path path = Paths.get(System.getProperty("user.dir"), "Bayes");
+        File f2 = new File( path.toString(), "mutatorConfigBayes.ini");
+        if(SetBayes && f2.exists()){
+            dir = f2.toString();
+            f = f2;
+        }
+        else{
+             dir = "MutationProbabilityConfig.ini";
+             f = new File( System.getProperty("user.dir"), dir); //to jakos inaczej podac trzeba
+        }
+
         _alpha = 12;
         _betha = 12;
         try {
@@ -180,6 +195,7 @@ public class MutationRandomizerSingleton {
     }
 
     public static void PushStats(MutationStatisticsListener stats) {
+        if(!SetBayes) return;
         //1. Objasnienie matematyczne Dla Kazdego i wyznaczamy alpha oraz beta  (stałe bayesa)  i to jest indeks operataro mutacyjnego
         //Poczatkowo ustawiamy stale o wartosni np 12 kazda wartośc poczatkow ajest dobra gdy nic nie wiemy. PATRZ konstruktor
         // obliczamy BETA ( Teta | Alpha, Beta)
@@ -215,13 +231,16 @@ public class MutationRandomizerSingleton {
             int scale =100;
             if(instance.configData.IsMutantKeyExist(mm.Id)) {
             scale =instance.configData.GetMutatroScale(mm.Id) ;
-            OldProb  = instance.configData.GetMutatorProbabilty(mm.Id);
+            OldProb  = instance.configData.GetMutatorProbabiltyVal(mm.Id);
             }
             instance.configData.SetMutatorProbabilty(mm.Id, newProbablity,  scale);//poprawka konfiga mutacji
             System.out.println("Operator: "+mm.Id+ " stare= "+ OldProb +" nowe= "+ newProbablity+" Skala= "+ scale);
         }
         //todo na koniec natpisac konfiga
         System.out.println("================================================================================");
+
+        instance.configData.UpdateConfig();
+        SetBayes = false;
     }
 
     private void BETA_OF_Tetha( long M_survived, long AllMutants){

@@ -1,10 +1,10 @@
 package org.pitest.extensions;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Michał Mnich  on 27.08.2016.
@@ -54,8 +54,44 @@ public class MutationConfig {
         br.close();
     }
 
-    public void UpdateConfig(){
+    /*
 
+    <HeareConfigStarts>
+
+INVERT_NEGS;0.5;100
+//od tego mejsce zmienne srodowiskowe dla pita
+MUTATION_MODE;1
+    * */
+    public void UpdateConfig(){
+        BufferedWriter writer = null;
+
+        Path path = Paths.get(System.getProperty("user.dir"), "Bayes");
+        File f = new File( path.toString(), "mutatorConfigBayes.ini");
+        try
+        {
+            String s = "<HeareConfigStarts>"+System.getProperty("line.separator");;
+            for (Map.Entry<String, MutantCofig> mutatorConfig :mutatorConfig.entrySet()) {
+            s+= mutatorConfig.getKey()+";"+mutatorConfig.getValue().Probabilty+";"+mutatorConfig.getValue().Scale+System.getProperty("line.separator");;
+            }
+            s+="MUTATION_MODE;1";
+            writer = new BufferedWriter( new FileWriter( f));
+            writer.write( s);
+
+        }
+        catch ( IOException e)
+        {
+        }
+        finally
+        {
+            try
+            {
+                if ( writer != null)
+                    writer.close( );
+            }
+            catch ( IOException e)
+            {
+            }
+        }
     }
 
     public int MutationMode(){
@@ -75,8 +111,13 @@ public class MutationConfig {
     //to tez np 0.5 dla skali 100 to bedzei 50 dla skali 1000 to 500 czyli next int dla skali 100 bedzie musial byc wiekszy niz 50 zeby uznac ze wylosowani prawde.
     public int GetMutatorProbabilty(String key){
         return (int) (mutatorConfig.get(key).Scale - (mutatorConfig.get(key).Scale* mutatorConfig.get(key).Probabilty));
+        //wartosc musi byc wieksza od  1 - prawdopodobienstwo bo liczone jest prze > next int czyli jak coś ma 0.4 szansy to loswanie musi byc wieksze niz 0.6
     }
 
+    public double GetMutatorProbabiltyVal(String key){
+        return  (mutatorConfig.get(key).Probabilty);
+
+    }
     public void SetMutatorProbabilty(String key, double Probabilty, int Scale){
         if(IsMutantKeyExist(key)){
             mutatorConfig.get(key).Scale  = Scale;
