@@ -200,11 +200,12 @@ public class MutationRandomizerSingleton {
         //Poczatkowo ustawiamy stale o wartosni np 12 kazda wartośc poczatkow ajest dobra gdy nic nie wiemy. PATRZ konstruktor
         // obliczamy BETA ( Teta | Alpha, Beta)
         // Obliczamy E_THETA
-
+        String toLog="";
         System.out.println("================================================================================");
         System.out.println("Prawdopodobieństwa Popraione Bayesem Nowe wartosci: ");
         System.out.println("================================================================================");
         MutationStatistics mutStat = stats.getStatistics();
+        toLog ="Operator;P_old(mut);p_new(mut);skala;KILLED;SURVIVED;NO_COVERAGE;TIMED_OUT;MEMORY_ERROR;RUN_ERROR;NON_VIABLE;NOT_STARTED;STARTED"+System.getProperty("line.separator");
         for (Score sorce : mutStat.getScores())
         {
 
@@ -215,6 +216,7 @@ public class MutationRandomizerSingleton {
             total_M = sorce.getTotalMutations();
             for (StatusCount status:counts) {
                 if(status.getStatus().equals(DetectionStatus.SURVIVED)){
+
                    M_s = status.getCount(); //liczba zywych mutantow
                 }
                 if(status.getStatus().equals(DetectionStatus.NO_COVERAGE)){
@@ -235,6 +237,47 @@ public class MutationRandomizerSingleton {
             }
             instance.configData.SetMutatorProbabilty(mm.Id, newProbablity,  scale);//poprawka konfiga mutacji
             System.out.println("Operator: "+mm.Id+ " stare= "+ OldProb +" nowe= "+ newProbablity+" Skala= "+ scale);
+
+            //dla loga----------------------------------------------------------------------------------------------
+            Map<String,String> csvLine = new HashMap<String,String>();
+            csvLine.put("Operator",mm.Id+"");
+            csvLine.put("stare",OldProb+"");
+            csvLine.put("nowe",newProbablity+"");
+            csvLine.put("Skala",scale+"");
+            for (StatusCount status:counts) {
+                if(status.getStatus().equals(DetectionStatus.KILLED)){
+                    csvLine.put(DetectionStatus.KILLED.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.SURVIVED)){
+                    csvLine.put(DetectionStatus.SURVIVED.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.NO_COVERAGE)){
+                    csvLine.put(DetectionStatus.NO_COVERAGE.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.TIMED_OUT)){
+                    csvLine.put(DetectionStatus.TIMED_OUT.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.MEMORY_ERROR)){
+                    csvLine.put(DetectionStatus.MEMORY_ERROR.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.RUN_ERROR)){
+                    csvLine.put(DetectionStatus.RUN_ERROR.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.NON_VIABLE)){
+                    csvLine.put(DetectionStatus.NON_VIABLE.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.NOT_STARTED)){
+                    csvLine.put(DetectionStatus.NOT_STARTED.toString(),status.getCount()+"");
+                }
+                if(status.getStatus().equals(DetectionStatus.STARTED)){
+                    csvLine.put(DetectionStatus.STARTED.toString(),status.getCount()+"");
+                }
+            }
+            //TODO wypisac cala linijke i dodać nazwe klasy
+
+            //dla loga----------------------------------------------------------------------------------------------
+
+            // toLog +="SURVIVED"+
         }
         //todo na koniec natpisac konfiga
         System.out.println("================================================================================");
