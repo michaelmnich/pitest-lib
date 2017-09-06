@@ -10,4 +10,5 @@ public interface IProjectMetaData extends Serializable {
     String[] GetMetaData();
     List<String> GetMetaDataList();
     List<String> GetClaspathAsAList();
+    List<FromFileMetaData> GetMetaDataAsAList();
 }

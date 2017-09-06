@@ -75,4 +75,9 @@ public class ImputMetaData implements IProjectMetaData {
         }
         return toretL;
     }
+
+    @Override
+    public List<FromFileMetaData> GetMetaDataAsAList() {
+        return null;
+    }
 }

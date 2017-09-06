@@ -14,7 +14,7 @@ public class BlockReportListner implements MutationResultListener {
 
     @Override
     public void handleMutationResult(ClassMutationResults results) {
-        System.out.println("Handluje resoulty tlalalala lalalalallalalallalalalallalallalalal");
+        System.out.println("Sam System Resoult Handler Not yet implemented");
     }
 
     @Override

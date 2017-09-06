@@ -25,7 +25,7 @@ public class MutationRandomizerSingleton {
     private MutationConfig configData;
     private List<MutatorsNames> mutansNames;
 
-    private BlockReportListner blockListner;
+   // private BlockReportListner blockListner;
 
     //Bayses------
     double _alpha=Double.NaN;
@@ -70,7 +70,7 @@ public class MutationRandomizerSingleton {
                 ));
 
         //mutansNames2 = mutansNames;
-        blockListner = new BlockReportListner();
+       // blockListner = new BlockReportListner();
 
         //tutja bedzie jakis confg reader;
         //TODO wypysac konfig oraz dorobic inne konfiguracje poza mutantami
@@ -178,9 +178,9 @@ public class MutationRandomizerSingleton {
         }
     }
 
-    public BlockReportListner GetBlockReportListner(){
-        return this.blockListner;
-    }
+   // public BlockReportListner GetBlockReportListner(){
+//        return this.blockListner;
+//    }
 
 
     /**

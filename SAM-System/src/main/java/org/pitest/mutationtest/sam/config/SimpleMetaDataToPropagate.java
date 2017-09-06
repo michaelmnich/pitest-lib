@@ -29,5 +29,10 @@ public class SimpleMetaDataToPropagate implements IProjectMetaData {
     public List<String> GetClaspathAsAList() {
         return claspathAsAListArguments;
     }
+
+    @Override
+    public List<FromFileMetaData> GetMetaDataAsAList() {
+        return null;
+    }
 }
 

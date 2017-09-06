@@ -120,6 +120,14 @@ public class MutationCoverage {
     this.timings.registerEnd(Timings.Stage.BUILD_MUTATION_TESTS);
 
     LOG.info("Created  " + tus.size() + " mutation test units");
+
+
+    if(tus.size()==0){
+      System.out.println("******************************************************************" );
+      System.out.println("Created  " + tus.size() + " mutation test units CLASS Skiped" );
+      System.out.println("******************************************************************" );
+      return new CombinedStatistics(stats.getStatistics(), coverageData.createSummary());
+    }
     checkMutationsFound(tus);
 
     recordClassPath(coverageData);
@@ -170,7 +178,7 @@ public class MutationCoverage {
     }
 
     //Tutaj dodac swojego listnera -------------------
-    ls.add(MutationRandomizerSingleton.getInstance().GetBlockReportListner());
+    //ls.add(MutationRandomizerSingleton.getInstance().GetBlockReportListner());
     ////Tutaj dodac swojego listnera -------------------
     return ls;
   }

@@ -74,9 +74,20 @@ public class ConsoleUi implements Iui{
                             _workerSerwer.RunnPitStandAlone(tempDataLocal);
                             break;
                         case "run mutation -bayes": //Odpalanie pojedynczej instacji pita projekt pobierany z konfiga z uwzglednienim bayesa
-                            IProjectMetaData tempDataLocal_bayes =new FromFileMetaData();
-                            MutationRandomizerSingleton.SetBayes = true;
-                            _workerSerwer.RunnPitStandAlone(tempDataLocal_bayes);
+                            FromFileMetaData tempDataLocal_bayes =new FromFileMetaData(true);
+                            for (FromFileMetaData data:tempDataLocal_bayes.GetMetaDataAsAList()) {
+                                System.out.println(".");
+                                System.out.println(".");
+                                System.out.println(".");
+                                System.out.println(".");
+                                System.out.println("-----------------------------------------------------------");
+                                System.out.println("MUTACJA BAYES Dla: "+ data.Classname);
+                                System.out.println("-----------------------------------------------------------");
+                                MutationRandomizerSingleton.SetBayes = true;
+
+                                _workerSerwer.RunnPitStandAlone(data);
+                            }
+
 
                             break;
                         case "run mutation -i": //Metoda z wstryzkiwanym imputem hardcoded narazie
