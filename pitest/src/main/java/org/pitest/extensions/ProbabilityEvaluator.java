@@ -24,6 +24,9 @@ public class ProbabilityEvaluator {
         Random randomno = new Random();
         int rn = randomno.nextInt(_scale);
         if(rn>=_eventProbability){
+            if(_eventProbability>0){
+                int dupatestowa=2;
+            }
             //z specyfikacji wyglada ze zawsze z zerem liczy a nie losuje ostatniej SPEC _\|/_
             //The method call returns a pseudorandom, uniformly distributed int value     /|\
             // between 0 (inclusive) and n (exclusive).

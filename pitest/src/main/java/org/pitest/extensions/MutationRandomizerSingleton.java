@@ -9,7 +9,9 @@ import org.pitest.mutationtest.statistics.Score;
 import org.pitest.mutationtest.statistics.StatusCount;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -31,6 +33,7 @@ public class MutationRandomizerSingleton {
     double _alpha=Double.NaN;
     double _betha=Double.NaN;
     public static boolean SetBayes = false;
+    public static String ActualClass;
     //Bayses------
 
     //-------------------------------------------------------------------------------------------------------------
@@ -90,6 +93,7 @@ public class MutationRandomizerSingleton {
 
         _alpha = 12;
         _betha = 12;
+        ActualClass = "unknown";
         try {
             configData.readConfig(f);
         } catch (IOException e) {
@@ -205,7 +209,9 @@ public class MutationRandomizerSingleton {
         System.out.println("Prawdopodobieństwa Popraione Bayesem Nowe wartosci: ");
         System.out.println("================================================================================");
         MutationStatistics mutStat = stats.getStatistics();
+        List<String> csvLines= new ArrayList<>();
         toLog ="Operator;P_old(mut);p_new(mut);skala;KILLED;SURVIVED;NO_COVERAGE;TIMED_OUT;MEMORY_ERROR;RUN_ERROR;NON_VIABLE;NOT_STARTED;STARTED"+System.getProperty("line.separator");
+        String Header="";
         for (Score sorce : mutStat.getScores())
         {
 
@@ -224,22 +230,35 @@ public class MutationRandomizerSingleton {
                 }
             }
 
-            instance.BETA_OF_Tetha(M_s,total_M);
-            M_s=0;
-            total_M=0;
+
+
             MutatorsNames mm =   getMutatorsNamesObj(sorce.getMutatorName()); //pobieram nazwe operatora mutacyjnego ktremu nalezy poprawic prawdopodobienstow
-            double newProbablity = instance.E_THETA();
+
             double OldProb =1;
             int scale =100;
-            if(instance.configData.IsMutantKeyExist(mm.Id)) {
-            scale =instance.configData.GetMutatroScale(mm.Id) ;
-            OldProb  = instance.configData.GetMutatorProbabiltyVal(mm.Id);
+            if(instance.configData.IsMutantKeyExist(mm.Id))
+            {
+                scale =instance.configData.GetMutatroScale(mm.Id) ;
+                OldProb  = instance.configData.GetMutatorProbabiltyVal(mm.Id);
+                instance._alpha  = instance.configData.GetMutatroAlpha(mm.Id);
+                instance._betha  = instance.configData.GetMutatroBeta(mm.Id);
+
             }
-            instance.configData.SetMutatorProbabilty(mm.Id, newProbablity,  scale);//poprawka konfiga mutacji
+            instance.BETA_OF_Tetha(M_s,total_M,instance._alpha,instance._betha);
+            double newProbablity = instance.E_THETA();
+
+            instance.configData.SetMutatorProbabilty(mm.Id, newProbablity,scale,instance._alpha,instance._betha);//poprawka konfiga mutacji
+            instance._alpha=12;
+            instance._betha=12;
+            M_s=0;
+            total_M=0;
+
             System.out.println("Operator: "+mm.Id+ " stare= "+ OldProb +" nowe= "+ newProbablity+" Skala= "+ scale);
 
             //dla loga----------------------------------------------------------------------------------------------
             Map<String,String> csvLine = new HashMap<String,String>();
+
+            csvLine.put("Klasa",instance.ActualClass+"");
             csvLine.put("Operator",mm.Id+"");
             csvLine.put("stare",OldProb+"");
             csvLine.put("nowe",newProbablity+"");
@@ -273,6 +292,16 @@ public class MutationRandomizerSingleton {
                     csvLine.put(DetectionStatus.STARTED.toString(),status.getCount()+"");
                 }
             }
+            //csvLines
+            String header="";
+            String line="";
+            for (Map.Entry<String,String> entry : csvLine.entrySet()) {
+                header=header+entry.getKey()+";";
+                line=line+entry.getValue()+";";
+
+            }
+            csvLines.add(line);
+            Header =header;
             //TODO wypisac cala linijke i dodać nazwe klasy
 
             //dla loga----------------------------------------------------------------------------------------------
@@ -284,15 +313,39 @@ public class MutationRandomizerSingleton {
 
         instance.configData.UpdateConfig();
         SetBayes = false;
+
+        try{
+            Path path = Paths.get(System.getProperty("user.dir"), "Bayes");
+            File f = new File( path.toString(), "raport.txt");
+            FileWriter writer = new FileWriter (f,true);
+            boolean start=true;
+            for (String entry : csvLines) {
+                if(start){
+                    writer.write(Header+"\n");
+                    start=false;
+                }
+                writer.write(entry+"\n");
+            }
+            start=true;
+
+           
+            writer.close();
+        }catch (Exception e){
+
+        }
+
+
+
     }
 
-    private void BETA_OF_Tetha( long M_survived, long AllMutants){
-        _alpha = _alpha + M_survived;
-        _betha = AllMutants -  M_survived + _betha;
+    private void BETA_OF_Tetha( long M_survived, long AllMutants, double alpha, double betha){
+        _alpha = alpha + M_survived;
+        _betha = AllMutants -  M_survived + betha;
 
     }
 
     private double  E_THETA(){
+//TOdo kazdy eksperyment powtorzyc kilkadziesat razy i do ostatecznych wliczac srednia wraz z odchyleniem
         return _alpha/(_alpha+_betha);
     }
 
