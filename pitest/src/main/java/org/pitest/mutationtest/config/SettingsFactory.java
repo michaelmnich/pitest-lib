@@ -26,6 +26,9 @@ import org.pitest.util.PitError;
 import org.pitest.util.ResultOutputStrategy;
 import org.pitest.util.StringUtil;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 
 import static org.pitest.functional.prelude.Prelude.not;
@@ -38,6 +41,16 @@ public class SettingsFactory {
   public SettingsFactory(final ReportOptions options,
       final PluginServices plugins) {
     this.options = options;
+    for (String path: options.getClassPathElements())
+    {
+      Path p = Paths.get(path);
+      if(!Files.exists(p)){
+        System.out.println("ERRROR: Plik: " + path +" nie istnieje");
+      }
+    }
+
+
+
     this.plugins = plugins;
   }
 

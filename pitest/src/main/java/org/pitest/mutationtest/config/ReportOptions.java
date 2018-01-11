@@ -69,7 +69,7 @@ public class ReportOptions {
   private File                           historyOutputLocation;
 
   private Collection<File>               sourceDirs;
-  private Collection<String>             classPathElements;
+  private Collection<String>             classPathElements; //kurwa too czemu??
   private Collection<String>             mutators;
 
   private int                            dependencyAnalysisMaxDistance;
